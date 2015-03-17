@@ -22,17 +22,16 @@ namespace Ariane.Test.Unit
         [Test]
         public void CanGenerateAProxy()
         {
-            var instance = _factory.GetPage<DavidHomepage>();
+            var instance = _factory.Load<DavidHomepage>();
 
             instance.MiddleWrapper.Click();
         }
     }
 
-    public class DavidHomepage : ICanBeNavigatedTo
+    [Uri("http://www.davidwhitney.co.uk")]
+    public class DavidHomepage
     {
-        public Uri Url { get { return new Uri("http://www.davidwhitney.co.uk/"); } }
-
-        [ById("middleWrapper")]
+        [Id("middleWrapper")]
         public virtual IWebElement MiddleWrapper { get; set; }
     }
 

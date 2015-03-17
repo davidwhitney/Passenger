@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdAttribute.cs" />
     <Compile Include="PageObjectFactory.cs" />
     <Compile Include="PageObjectProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

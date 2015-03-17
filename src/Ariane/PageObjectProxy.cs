@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 using Castle.DynamicProxy;
 using OpenQA.Selenium.Remote;
@@ -10,6 +10,13 @@ namespace Ariane
     {
         private readonly RemoteWebDriver _driver;
 
+        private readonly Dictionary<Type, Func<RemoteWebDriver, string, object>> _driverMapping = new Dictionary<Type, Func<RemoteWebDriver, string, object>>
+        {
+            {typeof (IdAttribute), (d,s) => d.FindElementById(s)},
+            {typeof (NameAttribute), (d,s) => d.FindElementByName(s)},
+            {typeof (CssSelectorAttribute), (d,s) => d.FindElementByCssSelector(s)},
+        };
+
         public PageObjectProxy(RemoteWebDriver driver)
         {
             _driver = driver;
@@ -17,42 +24,46 @@ namespace Ariane
 
         public void Intercept(IInvocation invocation)
         {
-            var property = GetAutoProp(invocation);
-            
+            if (!IsProperty(invocation))
+            {
+                invocation.Proceed();
+                return;
+            }
+
+            var property = GetPropertyInfo(invocation);
             if (property == null)
             {
                 invocation.Proceed();
                 return;
             }
 
-            var attrInstance = property.GetCustomAttribute<ByIdAttribute>();
-            if (attrInstance != null)
+            ExecuteSeleniumMatchers(invocation, property);
+        }
+
+        private void ExecuteSeleniumMatchers(IInvocation invocation, MemberInfo property)
+        {
+            foreach (var mapping in _driverMapping)
             {
-                invocation.ReturnValue = _driver.FindElementById(attrInstance.Id);
+                var attr = property.GetCustomAttribute(mapping.Key);
+                if (attr != null)
+                {
+                    var @base = (BaseAttribute) attr;
+                    invocation.ReturnValue = mapping.Value(_driver, @base.StringMatcher);
+                }
             }
         }
 
-        private static PropertyInfo GetAutoProp(IInvocation invocation)
+        private static bool IsProperty(IInvocation invocation)
         {
-            if (!invocation.Method.Name.StartsWith("get_") && !invocation.Method.Name.StartsWith("set_"))
-            {
-                return null;
-            }
-
+            return invocation.Method.Name.StartsWith("get_") || invocation.Method.Name.StartsWith("set_");
+        }
+        
+        private static PropertyInfo GetPropertyInfo(IInvocation invocation)
+        {
             var declaringType = invocation.Method.DeclaringType;
             var propertyName = invocation.Method.Name.Remove(0, 4);
             return declaringType.GetProperty(propertyName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        }
-    }
-
-    public class ByIdAttribute : Attribute
-    {
-        public string Id { get; set; }
-
-        public ByIdAttribute(string id)
-        {
-            Id = id;
         }
     }
 }
