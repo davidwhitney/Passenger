@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.PhantomJS;
 
 namespace Ariane.Test.Unit
 {
@@ -16,22 +13,27 @@ namespace Ariane.Test.Unit
         [SetUp]
         public void Setup()
         {
-            _factory = new PageObjectFactory();
+            _factory = new PageObjectFactory
+            {
+                WithDriver = () => new PhantomJSDriver()
+            };
         }
 
         [Test]
         public void CanGenerateAProxy()
         {
-            var instance = _factory.GetPage<GoogleHomepage>();
+            var instance = _factory.GetPage<DavidHomepage>();
 
-            instance.SearchBox.Click();
+            instance.MiddleWrapper.Click();
         }
     }
 
-    public class GoogleHomepage
+    public class DavidHomepage : ICanBeNavigatedTo
     {
-        [ById("search")]
-        public virtual IWebElement SearchBox { get; set; }
+        public Uri Url { get { return new Uri("http://www.davidwhitney.co.uk/"); } }
+
+        [ById("middleWrapper")]
+        public virtual IWebElement MiddleWrapper { get; set; }
     }
 
 }

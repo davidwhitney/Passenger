@@ -1,20 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Castle.DynamicProxy;
+using OpenQA.Selenium.Remote;
 
 namespace Ariane
 {
     public class PageObjectFactory
     {
-        public TPageObjectType GetPage<TPageObjectType>() where TPageObjectType : class
-        {
-            var generator = new ProxyGenerator();
-            var proxy = generator.CreateClassProxy<TPageObjectType>(new PageObjectProxy());
+        public Func<RemoteWebDriver> WithDriver { get; set; } 
 
-            return proxy;
+        public TPageObjectType GetPage<TPageObjectType>() where TPageObjectType : class, ICanBeNavigatedTo
+        {
+            var driver = WithDriver();
+            var generator = new ProxyGenerator();
+            var pageObjectProxy = new PageObjectProxy(driver);
+
+            var classProxy = generator.CreateClassProxy<TPageObjectType>(pageObjectProxy);
+
+            var root = classProxy.Url;
+            driver.Navigate().GoToUrl(root);
+
+            return classProxy;
         }
+    }
+
+    public interface ICanBeNavigatedTo
+    {
+        Uri Url { get; }
     }
 }

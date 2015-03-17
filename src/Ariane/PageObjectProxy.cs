@@ -1,30 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Castle.DynamicProxy;
+using OpenQA.Selenium.Remote;
 
 namespace Ariane
 {
     public class PageObjectProxy : IInterceptor
     {
+        private readonly RemoteWebDriver _driver;
+
+        public PageObjectProxy(RemoteWebDriver driver)
+        {
+            _driver = driver;
+        }
+
         public void Intercept(IInvocation invocation)
         {
-            Console.WriteLine("Before target call");
-            try
+            var property = GetAutoProp(invocation);
+            
+            if (property == null)
             {
                 invocation.Proceed();
+                return;
             }
-            catch (Exception)
+
+            var attrInstance = property.GetCustomAttribute<ByIdAttribute>();
+            if (attrInstance != null)
             {
-                Console.WriteLine("Target threw an exception!");
-                throw;
+                invocation.ReturnValue = _driver.FindElementById(attrInstance.Id);
             }
-            finally
+        }
+
+        private static PropertyInfo GetAutoProp(IInvocation invocation)
+        {
+            if (!invocation.Method.Name.StartsWith("get_") && !invocation.Method.Name.StartsWith("set_"))
             {
-                Console.WriteLine("After target call");
+                return null;
             }
+
+            var declaringType = invocation.Method.DeclaringType;
+            var propertyName = invocation.Method.Name.Remove(0, 4);
+            return declaringType.GetProperty(propertyName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
     }
 
