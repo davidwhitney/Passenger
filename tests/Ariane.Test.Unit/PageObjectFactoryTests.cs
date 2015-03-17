@@ -15,7 +15,8 @@ namespace Ariane.Test.Unit
         {
             _factory = new PageObjectFactory
             {
-                WithDriver = () => new PhantomJSDriver()
+                WithDriver = () => new PhantomJSDriver(),
+                WebRoot = () => "http://www.davidwhitney.co.uk"
             };
         }
 
@@ -28,7 +29,7 @@ namespace Ariane.Test.Unit
         }
     }
 
-    [Uri("http://www.davidwhitney.co.uk")]
+    [Uri("/")]
     public class DavidHomepage
     {
         [Id("middleWrapper")]
