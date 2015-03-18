@@ -56,7 +56,6 @@
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
-    <Compile Include="CommandHandlers\AttributeMap.cs" />
     <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
     <Compile Include="CommandHandlers\IHandleNavigation.cs" />
     <Compile Include="InvocationExtensions.cs" />
