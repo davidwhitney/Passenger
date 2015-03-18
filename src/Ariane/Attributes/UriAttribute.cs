@@ -6,12 +6,12 @@ namespace Ariane.Attributes
     {
         public Uri Uri { get; set; }
 
-        /// <param name="uri">A relative or absolute Uri. Relative Uris require a WebRoot to be configured.</param>
-        public UriAttribute(string uri)
+        /// <param name="relativeOrAbsoluteUri">Relative Uris require a WebRoot to be configured.</param>
+        public UriAttribute(string relativeOrAbsoluteUri)
         {
-            Uri = uri.StartsWith("http")
-                ? new Uri(uri, UriKind.Absolute)
-                : new Uri(uri, UriKind.Relative);
+            Uri = relativeOrAbsoluteUri.StartsWith("http")
+                ? new Uri(relativeOrAbsoluteUri, UriKind.Absolute)
+                : new Uri(relativeOrAbsoluteUri, UriKind.Relative);
         }
     }
 }

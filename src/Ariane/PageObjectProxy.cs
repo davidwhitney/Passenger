@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Ariane.Attributes;
-using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using OpenQA.Selenium.Remote;
 
@@ -23,13 +20,13 @@ namespace Ariane
 
         public void Intercept(IInvocation invocation)
         {
-            if (!IsProperty(invocation))
+            if (!invocation.IsProperty())
             {
                 invocation.Proceed();
                 return;
             }
 
-            var property = GetPropertyInfo(invocation);
+            var property = invocation.ToPropertyInfo();
             if (property == null)
             {
                 invocation.Proceed();
@@ -51,19 +48,6 @@ namespace Ariane
             }
             
             invocation.ReturnValue = handler.InvokeSeleniumSelection(property);
-        }
-
-        private static bool IsProperty(IInvocation invocation)
-        {
-            return invocation.Method.Name.StartsWith("get_") || invocation.Method.Name.StartsWith("set_");
-        }
-        
-        private static PropertyInfo GetPropertyInfo(IInvocation invocation)
-        {
-            var declaringType = invocation.Method.DeclaringType;
-            var propertyName = invocation.Method.Name.Remove(0, 4);
-            return declaringType.GetProperty(propertyName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
     }
 }

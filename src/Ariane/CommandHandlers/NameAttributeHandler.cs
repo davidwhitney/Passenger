@@ -18,7 +18,9 @@ namespace Ariane.CommandHandlers
 
         public object InvokeSeleniumSelection(PropertyInfo property)
         {
-            return _driver.FindElementByName(_attribute.Name);
+            return property.WhenEnumerable(
+                () => _driver.FindElementsByName(_attribute.Name),
+                () => _driver.FindElementByName(_attribute.Name));
         }
     }
 }
