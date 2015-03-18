@@ -1,11 +1,12 @@
+using System;
+
 namespace Ariane.Attributes
 {
-    public class CssSelectorAttribute : BaseAttribute
+    public class CssSelectorAttribute : Attribute
     {
         public string Selector { get; set; }
 
         public CssSelectorAttribute(string selector)
-            : base(selector)
         {
             Selector = selector;
         }

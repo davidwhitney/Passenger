@@ -1,10 +1,12 @@
-﻿namespace Ariane.Attributes
+﻿using System;
+
+namespace Ariane.Attributes
 {
-    public class IdAttribute : BaseAttribute
+    public class IdAttribute : Attribute
     {
         public string Id { get; set; }
 
-        public IdAttribute(string id) : base(id)
+        public IdAttribute(string id)
         {
             Id = id;
         }

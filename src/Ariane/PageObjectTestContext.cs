@@ -5,23 +5,38 @@ using OpenQA.Selenium.Remote;
 
 namespace Ariane
 {
-    public class PageObjectTestContext<TPageObjectType> : IDisposable
+    public class PageObjectTestContext<TPageObjectType> : IDisposable where TPageObjectType : class
     {
-        public TPageObjectType Page { get; set; }
         public RemoteWebDriver Driver { get; set; }
         public string WebRoot { get; set; }
 
-        public PageObjectTestContext(TPageObjectType pageObjectProxy, RemoteWebDriver driver, string webRoot)
+        private object _currentProxy;
+
+        public PageObjectTestContext(RemoteWebDriver driver, string webRoot)
         {
-            Page = pageObjectProxy;
             Driver = driver;
             WebRoot = webRoot;
 
-            var root = GetRoot(pageObjectProxy);
-            driver.Navigate().GoToUrl(root);
+            _currentProxy = CreateOrReturnProxy<TPageObjectType>();
+            driver.Navigate().GoToUrl(WebRootOf(_currentProxy));
         }
 
-        private string GetRoot(object classProxy)
+        public TCurrentPageObjectType Page<TCurrentPageObjectType>() where TCurrentPageObjectType : class
+        {
+            return CreateOrReturnProxy<TCurrentPageObjectType>();
+        }
+
+        private TCurrentPageObjectType CreateOrReturnProxy<TCurrentPageObjectType>() where TCurrentPageObjectType : class
+        {
+            if (_currentProxy == null || _currentProxy.GetType().BaseType != typeof (TCurrentPageObjectType))
+            {
+                _currentProxy = PageObjectProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
+            }
+
+            return (TCurrentPageObjectType) _currentProxy;
+        }
+
+        private string WebRootOf(object classProxy)
         {
             var attr = classProxy.GetType().GetCustomAttribute<UriAttribute>();
 

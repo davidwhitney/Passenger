@@ -26,10 +26,14 @@ namespace Ariane.Test.Unit
         {
             using (var ctx = _test.StartAt<DavidHomepage>())
             {
-                ctx.Page.MiddleWrapper.Click();
+                ctx.Page<DavidHomepage>().MiddleWrapper.Click();
+                ctx.Page<DavidHomepage>().MiddleWrapper.Click();
 
-                Assert.That(ctx.Page.MiddleWrapper.Text.Contains("coder"));
+                Assert.That(ctx.Page<DavidHomepage>().MiddleWrapper.Text.Contains("coder"));
             }
+
+
+
         }
     }
 

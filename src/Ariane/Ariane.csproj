@@ -51,11 +51,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\BaseAttribute.cs" />
     <Compile Include="Attributes\CssSelectorAttribute.cs" />
     <Compile Include="Attributes\IdAttribute.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
+    <Compile Include="CommandHandlers\CssSelectorAttributeHandler.cs" />
+    <Compile Include="CommandHandlers\NameAttributeHandler.cs" />
+    <Compile Include="CommandHandlers\IHandleNavigation.cs" />
+    <Compile Include="CommandHandlers\IdAttributeHandler.cs" />
+    <Compile Include="NavigationHandlerRegistry.cs" />
+    <Compile Include="PageObjectProxyGenerator.cs" />
     <Compile Include="PageObjectTest.cs" />
     <Compile Include="PageObjectProxy.cs" />
     <Compile Include="PageObjectTestContext.cs" />
@@ -64,8 +69,15 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="CommandHandlers\" />
+    <Content Include="..\..\packages\PhantomJS.2.0.0\tools\phantomjs\phantomjs.exe">
+      <Link>phantomjs.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="phantomjs-license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

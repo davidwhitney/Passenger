@@ -1,5 +1,4 @@
 ﻿using System;
-using Castle.DynamicProxy;
 using OpenQA.Selenium.Remote;
 
 namespace Ariane
@@ -12,11 +11,7 @@ namespace Ariane
         public PageObjectTestContext<TPageObjectType> StartAt<TPageObjectType>() where TPageObjectType : class
         {
             var driver = WithDriver();
-            var generator = new ProxyGenerator();
-            var pageObjectProxy = new PageObjectProxy(driver);
-            var classProxy = generator.CreateClassProxy<TPageObjectType>(pageObjectProxy);
-
-            return new PageObjectTestContext<TPageObjectType>(classProxy, driver, WebRoot());
+            return new PageObjectTestContext<TPageObjectType>(driver, WebRoot());
         }
     }
 }
