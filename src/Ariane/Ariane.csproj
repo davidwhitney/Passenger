@@ -56,12 +56,9 @@
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
-    <Compile Include="CommandHandlers\CssSelectorAttributeHandler.cs" />
-    <Compile Include="CommandHandlers\PropertyInfoExtensions.cs" />
-    <Compile Include="CommandHandlers\NameAttributeHandler.cs" />
+    <Compile Include="CommandHandlers\AttributeMap.cs" />
+    <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
     <Compile Include="CommandHandlers\IHandleNavigation.cs" />
-    <Compile Include="CommandHandlers\IdAttributeHandler.cs" />
-    <Compile Include="CommandHandlers\TextAttributeHandler.cs" />
     <Compile Include="InvocationExtensions.cs" />
     <Compile Include="IPageObject.cs" />
     <Compile Include="NavigationHandlerRegistry.cs" />
