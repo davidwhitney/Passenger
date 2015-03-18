@@ -4,12 +4,12 @@ using OpenQA.Selenium.Remote;
 
 namespace Ariane.CommandHandlers
 {
-    public class IdAttributeHandler : IHandleNavigation
+    public class TextAttributeHandler : IHandleNavigation
     {
-        private readonly IdAttribute _attribute;
+        private readonly TextAttribute _attribute;
         private readonly RemoteWebDriver _driver;
 
-        public IdAttributeHandler(IdAttribute attribute, RemoteWebDriver driver)
+        public TextAttributeHandler(TextAttribute attribute, RemoteWebDriver driver)
         {
             _attribute = attribute;
             _driver = driver;
@@ -17,11 +17,9 @@ namespace Ariane.CommandHandlers
 
         public object InvokeSeleniumSelection(PropertyInfo property)
         {
-            var elementId = _attribute.Id ?? property.Name;
-
             return property.WhenEnumerable(
-                () => _driver.FindElementsById(elementId),
-                () => _driver.FindElementById(elementId));
+                () => _driver.FindElementsByLinkText(_attribute.String),
+                () => _driver.FindElementByLinkText(_attribute.String));
         }
     }
 }

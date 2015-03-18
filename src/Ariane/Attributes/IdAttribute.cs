@@ -10,5 +10,9 @@ namespace Ariane.Attributes
         {
             Id = id;
         }
+
+        public IdAttribute()
+        {
+        }
     }
 }

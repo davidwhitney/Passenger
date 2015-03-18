@@ -23,13 +23,23 @@ namespace Ariane
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             _currentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Driver.Navigate().GoToUrl(WebRootOf(_currentProxy));
+            Driver.Navigate().GoToUrl(UrlFor(_currentProxy));
             return (TNextPageObjectType)_currentProxy;
         }
 
         public TCurrentPageObjectType Page<TCurrentPageObjectType>() where TCurrentPageObjectType : class
         {
             return CreateOrReturnProxy<TCurrentPageObjectType>();
+        }
+
+        public void VerifyRedirectionTo<TNextPageObjectType>() where TNextPageObjectType : class
+        {
+            var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
+            var urlOfNextPage = UrlFor(nextPage);
+            if (!Driver.Url.Contains(urlOfNextPage.PathAndQuery))
+            {
+                throw new Exception("We're not where we should be.");
+            }
         }
 
         private TCurrentPageObjectType CreateOrReturnProxy<TCurrentPageObjectType>() where TCurrentPageObjectType : class
@@ -42,7 +52,7 @@ namespace Ariane
             return (TCurrentPageObjectType) _currentProxy;
         }
 
-        private string WebRootOf(object classProxy)
+        private Uri UrlFor(object classProxy)
         {
             var attr = classProxy.GetType().GetCustomAttribute<UriAttribute>();
 
@@ -53,7 +63,7 @@ namespace Ariane
 
             if (attr.Uri.IsAbsoluteUri)
             {
-                return attr.Uri.ToString();
+                return attr.Uri;
             }
 
             if (string.IsNullOrWhiteSpace(WebRoot))
@@ -61,7 +71,7 @@ namespace Ariane
                 throw new Exception("You need to configure a WebRoot to use relative Uris");
             }
 
-            return new Uri(new Uri(WebRoot), attr.Uri).ToString();
+            return new Uri(new Uri(WebRoot), attr.Uri);
         }
 
         public void Dispose()

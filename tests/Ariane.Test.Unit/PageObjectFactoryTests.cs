@@ -28,9 +28,10 @@ namespace Ariane.Test.Unit
             using (var ctx = _testConfig.StartTestAt<Homepage>())
             {
                 ctx.Page<Homepage>().MiddleWrapper.Click();
-                ctx.Page<Homepage>().MiddleWrapper.Click();
+                ctx.Page<Homepage>().middleWrapper.Click();
+                ctx.Page<Homepage>().BlogLink.Click();
 
-                ctx.GoTo<Blog>();
+                ctx.VerifyRedirectionTo<Blog>();
 
                 foreach (var post in ctx.Page<Blog>().Posts)
                 {
@@ -45,6 +46,12 @@ namespace Ariane.Test.Unit
     {
         [Id("middleWrapper")]
         public virtual IWebElement MiddleWrapper { get; set; }
+
+        [Id]
+        public virtual IWebElement middleWrapper { get; set; }
+
+        [Text("Blog")]
+        public virtual IWebElement BlogLink { get; set; }
     }
 
     [Uri("/Blog")]
