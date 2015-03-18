@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Castle.DynamicProxy;
+using Ariane.Attributes;
 using OpenQA.Selenium.Remote;
 
 namespace Ariane
 {
-    public class PageObjectFactory
+    public class PageObjectTestContext<TPageObjectType> : IDisposable
     {
-        public Func<RemoteWebDriver> WithDriver { get; set; }
-        public Func<string> WebRoot { get; set; }
+        public TPageObjectType Page { get; set; }
+        public RemoteWebDriver Driver { get; set; }
+        public string WebRoot { get; set; }
 
-        public TPageObjectType Load<TPageObjectType>() where TPageObjectType : class
+        public PageObjectTestContext(TPageObjectType pageObjectProxy, RemoteWebDriver driver, string webRoot)
         {
-            var driver = WithDriver();
-            var generator = new ProxyGenerator();
-            var pageObjectProxy = new PageObjectProxy(driver);
+            Page = pageObjectProxy;
+            Driver = driver;
+            WebRoot = webRoot;
 
-            var classProxy = generator.CreateClassProxy<TPageObjectType>(pageObjectProxy);
-
-            var root = GetRoot(classProxy);
+            var root = GetRoot(pageObjectProxy);
             driver.Navigate().GoToUrl(root);
-
-            return classProxy;
         }
 
         private string GetRoot(object classProxy)
@@ -38,13 +35,17 @@ namespace Ariane
                 return attr.Uri.ToString();
             }
 
-            var root = WebRoot();
-            if (string.IsNullOrWhiteSpace(root))
+            if (string.IsNullOrWhiteSpace(WebRoot))
             {
                 throw new Exception("You need to configure a WebRoot to use relative Uris");
             }
 
-            return new Uri(new Uri(root), attr.Uri).ToString();
+            return new Uri(new Uri(WebRoot), attr.Uri).ToString();
+        }
+
+        public void Dispose()
+        {
+            Driver.Close();
         }
     }
 }

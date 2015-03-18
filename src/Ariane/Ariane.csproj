@@ -51,13 +51,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdAttribute.cs" />
-    <Compile Include="PageObjectFactory.cs" />
+    <Compile Include="Attributes\BaseAttribute.cs" />
+    <Compile Include="Attributes\CssSelectorAttribute.cs" />
+    <Compile Include="Attributes\IdAttribute.cs" />
+    <Compile Include="Attributes\NameAttribute.cs" />
+    <Compile Include="Attributes\UriAttribute.cs" />
+    <Compile Include="PageObjectTest.cs" />
     <Compile Include="PageObjectProxy.cs" />
+    <Compile Include="PageObjectTestContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CommandHandlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

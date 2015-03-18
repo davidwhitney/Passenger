@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Ariane.Attributes;
 using Castle.DynamicProxy;
 using OpenQA.Selenium.Remote;
 

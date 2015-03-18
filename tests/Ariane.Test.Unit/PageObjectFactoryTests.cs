@@ -1,4 +1,5 @@
 ﻿using System;
+using Ariane.Attributes;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
@@ -8,12 +9,12 @@ namespace Ariane.Test.Unit
     [TestFixture]
     public class PageObjectFactoryTests
     {
-        private PageObjectFactory _factory;
+        private PageObjectTest _test;
 
         [SetUp]
         public void Setup()
         {
-            _factory = new PageObjectFactory
+            _test = new PageObjectTest
             {
                 WithDriver = () => new PhantomJSDriver(),
                 WebRoot = () => "http://www.davidwhitney.co.uk"
@@ -23,9 +24,12 @@ namespace Ariane.Test.Unit
         [Test]
         public void CanGenerateAProxy()
         {
-            var instance = _factory.Load<DavidHomepage>();
+            using (var ctx = _test.StartAt<DavidHomepage>())
+            {
+                ctx.Page.MiddleWrapper.Click();
 
-            instance.MiddleWrapper.Click();
+                Assert.That(ctx.Page.MiddleWrapper.Text.Contains("coder"));
+            }
         }
     }
 
