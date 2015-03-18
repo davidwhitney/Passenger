@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Ariane.Attributes;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -9,14 +10,14 @@ namespace Ariane.Test.Unit
     [TestFixture]
     public class PageObjectFactoryTests
     {
-        private PageObjectTest _test;
+        private ArianeConfiguration _testConfig;
 
         [SetUp]
         public void Setup()
         {
-            _test = new PageObjectTest
+            _testConfig = new ArianeConfiguration
             {
-                WithDriver = () => new PhantomJSDriver(),
+                Driver = () => new PhantomJSDriver(),
                 WebRoot = () => "http://www.davidwhitney.co.uk"
             };
         }
@@ -24,24 +25,33 @@ namespace Ariane.Test.Unit
         [Test]
         public void CanGenerateAProxy()
         {
-            using (var ctx = _test.StartAt<DavidHomepage>())
+            using (var ctx = _testConfig.StartTestAt<Homepage>())
             {
-                ctx.Page<DavidHomepage>().MiddleWrapper.Click();
-                ctx.Page<DavidHomepage>().MiddleWrapper.Click();
+                ctx.Page<Homepage>().MiddleWrapper.Click();
+                ctx.Page<Homepage>().MiddleWrapper.Click();
 
-                Assert.That(ctx.Page<DavidHomepage>().MiddleWrapper.Text.Contains("coder"));
+                ctx.GoTo<Blog>();
+
+                foreach (var post in ctx.Page<Blog>().Posts)
+                {
+                    Console.WriteLine(post.Text);
+                }
             }
-
-
-
         }
     }
 
     [Uri("/")]
-    public class DavidHomepage
+    public class Homepage
     {
         [Id("middleWrapper")]
         public virtual IWebElement MiddleWrapper { get; set; }
+    }
+
+    [Uri("/Blog")]
+    public class Blog
+    {
+        [CssSelector(".blog-post-title-on-index")]
+        public virtual IEnumerable<IWebElement> Posts { get; set; }
     }
 
 }

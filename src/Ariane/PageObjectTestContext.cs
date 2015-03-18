@@ -17,8 +17,14 @@ namespace Ariane
             Driver = driver;
             WebRoot = webRoot;
 
-            _currentProxy = CreateOrReturnProxy<TPageObjectType>();
-            driver.Navigate().GoToUrl(WebRootOf(_currentProxy));
+            GoTo<TPageObjectType>();
+        }
+
+        public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
+        {
+            _currentProxy = CreateOrReturnProxy<TNextPageObjectType>();
+            Driver.Navigate().GoToUrl(WebRootOf(_currentProxy));
+            return (TNextPageObjectType)_currentProxy;
         }
 
         public TCurrentPageObjectType Page<TCurrentPageObjectType>() where TCurrentPageObjectType : class
