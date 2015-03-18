@@ -6,13 +6,9 @@ namespace Ariane.Attributes
     {
         public string Id { get; set; }
 
-        public IdAttribute(string id)
+        public IdAttribute(string id = "")
         {
             Id = id;
-        }
-
-        public IdAttribute()
-        {
         }
     }
 }

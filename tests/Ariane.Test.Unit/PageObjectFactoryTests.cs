@@ -29,7 +29,7 @@ namespace Ariane.Test.Unit
             {
                 ctx.Page<Homepage>().MiddleWrapper.Click();
                 ctx.Page<Homepage>().middleWrapper.Click();
-                ctx.Page<Homepage>().BlogLink.Click();
+                ctx.Page<Homepage>().Blog.Click();
 
                 ctx.VerifyRedirectionTo<Blog>();
 
@@ -50,8 +50,8 @@ namespace Ariane.Test.Unit
         [Id]
         public virtual IWebElement middleWrapper { get; set; }
 
-        [Text("Blog")]
-        public virtual IWebElement BlogLink { get; set; }
+        [Text]
+        public virtual IWebElement Blog { get; set; }
     }
 
     [Uri("/Blog")]

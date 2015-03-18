@@ -6,7 +6,7 @@ namespace Ariane.Attributes
     {
         public string String { get; set; }
 
-        public TextAttribute(string @string)
+        public TextAttribute(string @string = "")
         {
             String = @string;
         }

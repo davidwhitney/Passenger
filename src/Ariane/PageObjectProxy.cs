@@ -46,7 +46,14 @@ namespace Ariane
                 invocation.Proceed();
                 return;
             }
-            
+
+            var selectionHandlerResult = handler.InvokeSeleniumSelection(property);
+            if (selectionHandlerResult == null)
+            {
+                invocation.Proceed();
+                return;
+            }
+
             invocation.ReturnValue = handler.InvokeSeleniumSelection(property);
         }
     }

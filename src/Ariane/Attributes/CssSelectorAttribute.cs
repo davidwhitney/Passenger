@@ -6,7 +6,7 @@ namespace Ariane.Attributes
     {
         public string Selector { get; set; }
 
-        public CssSelectorAttribute(string selector)
+        public CssSelectorAttribute(string selector = "")
         {
             Selector = selector;
         }

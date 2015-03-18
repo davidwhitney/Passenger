@@ -77,6 +77,7 @@ namespace Ariane
         public void Dispose()
         {
             Driver.Close();
+            Driver.Dispose();
         }
     }
 }

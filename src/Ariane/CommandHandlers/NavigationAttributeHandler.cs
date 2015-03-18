@@ -15,9 +15,9 @@ namespace Ariane.CommandHandlers
         private readonly List<IHandle> _attributeHandlingMap = new List<IHandle>
         {
             new Handle<IdAttribute>(a => ((IdAttribute) a).Id, (key, d) => d.FindElementsById(key)),
-            new Handle<NameAttribute>(a => ((NameAttribute) a).Name, (key, d) => d.FindElementsById(key)),
-            new Handle<TextAttribute>(a => ((TextAttribute) a).String, (key, d) => d.FindElementsById(key)),
-            new Handle<CssSelectorAttribute>(a => ((CssSelectorAttribute) a).Selector, (key, d) => d.FindElementsById(key)),
+            new Handle<NameAttribute>(a => ((NameAttribute) a).Name, (key, d) => d.FindElementsByName(key)),
+            new Handle<TextAttribute>(a => ((TextAttribute) a).String, (key, d) => d.FindElementsByLinkText(key)),
+            new Handle<CssSelectorAttribute>(a => ((CssSelectorAttribute) a).Selector, (key, d) => d.FindElementsByCssSelector(key)),
         };
 
         public NavigationAttributeHandler(Attribute attr, RemoteWebDriver driver)
@@ -31,7 +31,8 @@ namespace Ariane.CommandHandlers
             var attributeHandler = _attributeHandlingMap.SingleOrDefault(map => _attr.GetType() == map.AttributeType);
             
             var textValue = attributeHandler.GetLookupValue(_attr);
-            var matches = attributeHandler.FindAllMatches(textValue ?? property.Name, _driver);
+            var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
+            var matches = attributeHandler.FindAllMatches(key, _driver);
 
             if (property.PropertyType.GetInterfaces().Any(x => x.Name.ToLower().Contains("enumerable")))
             {
