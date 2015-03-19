@@ -10,13 +10,13 @@ namespace Ariane.ModelInterception
 {
     public class PageObjectProxy : IInterceptor
     {
-        private readonly IDriverBindings _driver;
-        private TypeSubstitutionHandler _typeSubstitution;
+        private readonly TypeSubstitutionHandler _typeSubstitution;
+        private readonly ElementSelectionHandler _elementSelectionHandler;
 
         public PageObjectProxy(IDriverBindings driver)
         {
-            _driver = driver;
-            _typeSubstitution = new TypeSubstitutionHandler(_driver);
+            _typeSubstitution = new TypeSubstitutionHandler(driver);
+            _elementSelectionHandler = new ElementSelectionHandler(driver);
         }
 
         public void Intercept(IInvocation invocation)
@@ -27,41 +27,46 @@ namespace Ariane.ModelInterception
                 return;
             }
 
-            var property = invocation.ToPropertyInfo();
-
-            var match = _typeSubstitution.FindSubstituteFor(property);
-            if (match != null)
+            var result = InterceptProperty(invocation, invocation.ToPropertyInfo());
+            if (result == InvocationResult.Proceed)
             {
-                invocation.ReturnValue = match.GetInstance();
+                invocation.Proceed();
                 return;
             }
+         
+            invocation.ReturnValue = result.Value;
+        }
 
+        public InvocationResult InterceptProperty(IInvocation invocation, PropertyInfo property)
+        {
+            var typeSubstitution = _typeSubstitution.FindSubstituteFor(property);
             var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
-            if (!attributes.Any())
+            var firstAttribute = attributes.FirstOrDefault();
+
+            var validations = new Dictionary<Func<bool>, Func<InvocationResult>>
             {
-                invocation.Proceed();
-                return;
+                {() => typeSubstitution != null, () => InvocationResult.Assign(typeSubstitution.GetInstance())},
+                {() => !attributes.Any(), () => InvocationResult.Proceed },
+                {() => attributes.Count > 1, () => {throw new Exception("Only one selection attribute is valid per property.");} },
+                {() => invocation.IsSetProperty(), () => {throw new Exception("You can't set a property that has a selection attribute.");} },
+                {() => _elementSelectionHandler.SelectElement(firstAttribute, property) == null, () => InvocationResult.Proceed },
+            };
+
+            foreach (var rule in validations.Where(rule => rule.Key()))
+            {
+                return rule.Value();
             }
 
-            if (attributes.Count > 1)
-            {
-                throw new Exception("Only one selection attribute is valid per property.");
-            }
+            var selectionHandlerResult = _elementSelectionHandler.SelectElement(attributes.First(), property);
+            return InvocationResult.Assign(selectionHandlerResult);
+        }
 
-            if (invocation.IsSetProperty())
-            {
-                throw new Exception("You can't set a property that has a selection attribute.");
-            }
-
-            var handler = new NavigationAttributeHandler(attributes.First(), _driver);
-            var selectionHandlerResult = handler.Invoke(property);
-            if (selectionHandlerResult == null)
-            {
-                invocation.Proceed();
-                return;
-            }
-
-            invocation.ReturnValue = selectionHandlerResult;
+        public class InvocationResult
+        {
+            public object Value { get; set; }
+            public static InvocationResult Proceed { get { return ProceedBacking; } }
+            private static readonly InvocationResult ProceedBacking = new InvocationResult();
+            public static InvocationResult Assign(object result) { return new InvocationResult {Value = result};}
         }
     }
 }

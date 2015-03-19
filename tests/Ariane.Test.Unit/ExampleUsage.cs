@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ariane.Attributes;
-using Ariane.Drivers;
 using Ariane.Drivers.RemoteWebDriver;
 using NUnit.Framework;
 using OpenQA.Selenium;

@@ -6,22 +6,25 @@ using Ariane.Drivers;
 
 namespace Ariane.CommandHandlers
 {
-    public class NavigationAttributeHandler
+    public class ElementSelectionHandler
     {
         private readonly IDriverBindings _driver;
-        private readonly Attribute _attr;
 
-        public NavigationAttributeHandler(Attribute attr, IDriverBindings driver)
+        public ElementSelectionHandler(IDriverBindings driver)
         {
             _driver = driver;
-            _attr = attr;
         }
 
-        public object Invoke(PropertyInfo property)
+        public object SelectElement(Attribute attr, PropertyInfo property)
         {
-            var attributeHandler = _driver.NavigationHandlers.SingleOrDefault(map => _attr.GetType() == map.AttributeType);
+            if (attr == null || property == null)
+            {
+                return null;
+            }
+
+            var attributeHandler = _driver.NavigationHandlers.SingleOrDefault(map => attr.GetType() == map.AttributeType);
             
-            var textValue = attributeHandler.GetLookupValue(_attr);
+            var textValue = attributeHandler.GetLookupValue(attr);
             var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
             var allMatches = attributeHandler.FindAllMatches(key, _driver);
 

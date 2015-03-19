@@ -59,7 +59,7 @@
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
-    <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
+    <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
     <Compile Include="ModelInterception\InvocationExtensions.cs" />
     <Compile Include="ModelInterception\PageObjectProxyGenerator.cs" />
