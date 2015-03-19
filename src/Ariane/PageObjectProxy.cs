@@ -26,11 +26,6 @@ namespace Ariane
             }
 
             var property = invocation.ToPropertyInfo();
-            if (property == null)
-            {
-                invocation.Proceed();
-                return;
-            }
 
             var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
             if (!attributes.Any())
@@ -39,13 +34,17 @@ namespace Ariane
                 return;
             }
 
-            var handler = attributes.Select(attr => new NavigationAttributeHandler(attr, _driver)).SingleOrDefault(h => h != null);
-            if (handler == null)
+            if (attributes.Count > 1)
             {
-                invocation.Proceed();
-                return;
+                throw new Exception("Only one selection attribute is valid per property.");
             }
 
+            if (invocation.IsSetProperty())
+            {
+                throw new Exception("You can't set a property that has a selection attribute.");
+            }
+
+            var handler = new NavigationAttributeHandler(attributes.First(), _driver);
             var selectionHandlerResult = handler.InvokeSeleniumSelection(property);
             if (selectionHandlerResult == null)
             {
@@ -53,7 +52,7 @@ namespace Ariane
                 return;
             }
 
-            invocation.ReturnValue = handler.InvokeSeleniumSelection(property);
+            invocation.ReturnValue = selectionHandlerResult;
         }
     }
 }

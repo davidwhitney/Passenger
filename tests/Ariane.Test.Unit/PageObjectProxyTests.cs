@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
+using Ariane.Attributes;
 using Castle.DynamicProxy;
 using NUnit.Framework;
 using OpenQA.Selenium.Remote;
@@ -49,8 +51,34 @@ namespace Ariane.Test.Unit
             Assert.That(value, Is.EqualTo("method return"));
         }
 
+        [Test]
+        public void Intercept_SetFieldWithIdAttribute_Throws()
+        {
+            var ex = Assert.Throws<Exception>(() => _proxy.IdAttributed = "here's a value");
+
+            Assert.That(ex.Message, Is.EqualTo("You can't set a property that has a selection attribute."));
+        }
+
+        [Test]
+        public void Intercept_GetFieldWithMultipleSelectionAttributes_Throws()
+        {
+            var ex = Assert.Throws<Exception>(() =>
+            {
+                var temp =_proxy.MultiAttributed;
+            });
+
+            Assert.That(ex.Message, Is.EqualTo("Only one selection attribute is valid per property."));
+        }
+
         public class InterceptedType
         {
+            [Id]
+            public virtual string IdAttributed { get; set; }
+
+            [Id]
+            [CssSelector]
+            public virtual string MultiAttributed { get; set; }
+
             public virtual string AString { get; set; }
 
             private string _fieldBacked;

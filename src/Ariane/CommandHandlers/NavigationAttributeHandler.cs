@@ -12,7 +12,7 @@ namespace Ariane.CommandHandlers
         private readonly RemoteWebDriver _driver;
         private readonly Attribute _attr;
 
-        private readonly List<IHandle> _attributeHandlingMap = new List<IHandle>
+        private static readonly List<IHandle> AttributeHandlingMap = new List<IHandle>
         {
             new Handle<IdAttribute>(a => ((IdAttribute) a).Id, (key, d) => d.FindElementsById(key)),
             new Handle<NameAttribute>(a => ((NameAttribute) a).Name, (key, d) => d.FindElementsByName(key)),
@@ -26,9 +26,14 @@ namespace Ariane.CommandHandlers
             _attr = attr;
         }
 
+        public static bool Supports(Type handlerType)
+        {
+            return AttributeHandlingMap.Any(map => handlerType == map.AttributeType);
+        }
+
         public object InvokeSeleniumSelection(PropertyInfo property)
         {
-            var attributeHandler = _attributeHandlingMap.SingleOrDefault(map => _attr.GetType() == map.AttributeType);
+            var attributeHandler = AttributeHandlingMap.SingleOrDefault(map => _attr.GetType() == map.AttributeType);
             
             var textValue = attributeHandler.GetLookupValue(_attr);
             var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
