@@ -6,6 +6,7 @@ using Ariane.Drivers.RemoteWebDriver;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Remote;
 
 namespace Ariane.Test.Unit
 {
@@ -36,9 +37,9 @@ namespace Ariane.Test.Unit
             _ctx = _testConfig.StartTestAt<Homepage>();
 
             _ctx.Page<Homepage>().MiddleWrapper.Click();
-            _ctx.Page<Homepage>().middleWrapper.Click();
-            _ctx.Page<Homepage>().Blog.Click();
+            _ctx.Page<Homepage>().FillInForm("abc");
 
+            _ctx.Page<Homepage>().Blog.Click();
             _ctx.VerifyRedirectionTo<Blog>();
 
             foreach (var post in _ctx.Page<Blog>().Posts)
@@ -51,6 +52,9 @@ namespace Ariane.Test.Unit
     [Uri("/")]
     public class Homepage
     {
+        // Magically wired up.
+        protected virtual RemoteWebDriver YayWebDriver { get; set; }
+
         [Id("middleWrapper")]
         public virtual IWebElement MiddleWrapper { get; set; }
 
@@ -62,6 +66,7 @@ namespace Ariane.Test.Unit
 
         public void FillInForm(string user)
         {
+            var ele = YayWebDriver.FindElementById("middleWrapper"); // Or some other driver operation
         }
     }
 
