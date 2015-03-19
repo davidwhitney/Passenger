@@ -58,12 +58,14 @@
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
     <Compile Include="CommandHandlers\IHandleNavigation.cs" />
-    <Compile Include="InvocationExtensions.cs" />
-    <Compile Include="PageObjectProxyGenerator.cs" />
+    <Compile Include="Drivers\DriverBindings.cs" />
+    <Compile Include="ModelInterception\InvocationExtensions.cs" />
+    <Compile Include="ModelInterception\PageObjectProxyGenerator.cs" />
     <Compile Include="ArianeConfiguration.cs" />
-    <Compile Include="PageObjectProxy.cs" />
+    <Compile Include="ModelInterception\PageObjectProxy.cs" />
     <Compile Include="PageObjectTestContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Drivers\WebDriverBindings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

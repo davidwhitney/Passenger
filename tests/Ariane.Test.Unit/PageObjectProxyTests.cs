@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Ariane.Attributes;
+using Ariane.ModelInterception;
 using Castle.DynamicProxy;
 using NUnit.Framework;
 using OpenQA.Selenium.Remote;

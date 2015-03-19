@@ -1,11 +1,11 @@
 ﻿using System;
-using OpenQA.Selenium.Remote;
+using Ariane.Drivers;
 
 namespace Ariane
 {
     public class ArianeConfiguration
     {
-        public Func<RemoteWebDriver> Driver { get; set; }
+        public Func<DriverBindings> Driver { get; set; }
         public Func<string> WebRoot { get; set; }
 
         public PageObjectTestContext<TPageObjectType> StartTestAt<TPageObjectType>() where TPageObjectType : class

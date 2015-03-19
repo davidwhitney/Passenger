@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ariane.CommandHandlers;
+using Ariane.Drivers;
 using Castle.DynamicProxy;
-using OpenQA.Selenium.Remote;
 
-namespace Ariane
+namespace Ariane.ModelInterception
 {
     public class PageObjectProxy : IInterceptor
     {
-        private readonly RemoteWebDriver _driver;
+        private readonly DriverBindings _driver;
 
-        public PageObjectProxy(RemoteWebDriver driver)
+        public PageObjectProxy(DriverBindings driver)
         {
             _driver = driver;
         }
@@ -45,7 +45,7 @@ namespace Ariane
             }
 
             var handler = new NavigationAttributeHandler(attributes.First(), _driver);
-            var selectionHandlerResult = handler.InvokeSeleniumSelection(property);
+            var selectionHandlerResult = handler.InvokeDriver(property);
             if (selectionHandlerResult == null)
             {
                 invocation.Proceed();

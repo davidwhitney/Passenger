@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Reflection;
 using Ariane.Attributes;
-using OpenQA.Selenium.Remote;
+using Ariane.Drivers;
+using Ariane.ModelInterception;
 
 namespace Ariane
 {
     public class PageObjectTestContext<TPageObjectType> : IDisposable where TPageObjectType : class
     {
-        public RemoteWebDriver Driver { get; set; }
+        public DriverBindings Driver { get; set; }
         public string WebRoot { get; set; }
 
         private object _currentProxy;
 
-        public PageObjectTestContext(RemoteWebDriver driver, string webRoot)
+        public PageObjectTestContext(DriverBindings driver, string webRoot)
         {
             Driver = driver;
             WebRoot = webRoot;
@@ -23,7 +24,7 @@ namespace Ariane
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             _currentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Driver.Navigate().GoToUrl(UrlFor(_currentProxy));
+            Driver.NavigateTo(UrlFor(_currentProxy));
             return (TNextPageObjectType)_currentProxy;
         }
 
@@ -76,7 +77,6 @@ namespace Ariane
 
         public void Dispose()
         {
-            Driver.Close();
             Driver.Dispose();
         }
     }

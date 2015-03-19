@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Castle.DynamicProxy;
 
-namespace Ariane
+namespace Ariane.ModelInterception
 {
     public static class InvocationExtensions
     {
