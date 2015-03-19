@@ -8,7 +8,7 @@ using OpenQA.Selenium.PhantomJS;
 namespace Ariane.Test.Unit
 {
     [TestFixture]
-    public class PageObjectFactoryTests
+    public class ExampleUsage
     {
         private ArianeConfiguration _testConfig;
 

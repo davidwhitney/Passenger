@@ -55,7 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PageObjectFactoryTests.cs" />
+    <Compile Include="ExampleUsage.cs" />
     <Compile Include="PageObjectProxyGeneratorTests.cs" />
     <Compile Include="PageObjectProxyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
