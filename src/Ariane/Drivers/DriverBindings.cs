@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ariane.Drivers
 {
-    public abstract class DriverBindings : IDisposable
+    public abstract class DriverBindings : IDisposable, IDriverBindings
     {
         public abstract string Url { get; }
         public abstract void NavigateTo(Uri url);
@@ -14,9 +14,9 @@ namespace Ariane.Drivers
         {
             public Type AttributeType { get { return typeof(TAttributeType); } }
             public Func<Attribute, string> GetLookupValue { get; private set; }
-            public Func<string, DriverBindings, object> FindAllMatches { get; private set; }
+            public Func<string, IDriverBindings, object> FindAllMatches { get; private set; }
 
-            public Handle(Func<Attribute, string> getLookupValue, Func<string, DriverBindings, object> findAllMatches)
+            public Handle(Func<Attribute, string> getLookupValue, Func<string, IDriverBindings, object> findAllMatches)
             {
                 GetLookupValue = getLookupValue;
                 FindAllMatches = findAllMatches;
@@ -27,7 +27,7 @@ namespace Ariane.Drivers
         {
             Type AttributeType { get; }
             Func<Attribute, string> GetLookupValue { get; }
-            Func<string, DriverBindings, object> FindAllMatches { get; }
+            Func<string, IDriverBindings, object> FindAllMatches { get; }
         }
     }
 }

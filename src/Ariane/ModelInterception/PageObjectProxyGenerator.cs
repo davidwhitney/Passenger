@@ -1,18 +1,12 @@
 ﻿using System;
 using Ariane.Drivers;
 using Castle.DynamicProxy;
-using OpenQA.Selenium.Remote;
 
 namespace Ariane.ModelInterception
 {
     public static class PageObjectProxyGenerator
     {
-        public static TPageObjectType Generate<TPageObjectType>(RemoteWebDriver driver) where TPageObjectType : class
-        {
-            return Generate<TPageObjectType>(new WebDriverBindings(driver));
-        }
-
-        public static TPageObjectType Generate<TPageObjectType>(DriverBindings driver) where TPageObjectType : class
+        public static TPageObjectType Generate<TPageObjectType>(IDriverBindings driver) where TPageObjectType : class
         {
             if (driver == null)
             {

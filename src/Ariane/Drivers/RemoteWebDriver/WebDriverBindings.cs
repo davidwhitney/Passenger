@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ariane.Attributes;
-using OpenQA.Selenium.Remote;
 
-namespace Ariane.Drivers
+namespace Ariane.Drivers.RemoteWebDriver
 {
     public class WebDriverBindings : DriverBindings
     {
-        public RemoteWebDriver Driver { get; private set; }
+        public OpenQA.Selenium.Remote.RemoteWebDriver Driver { get; private set; }
         public override string Url { get { return Driver.Url; } }
 
-        public WebDriverBindings(RemoteWebDriver driver)
+        public WebDriverBindings(OpenQA.Selenium.Remote.RemoteWebDriver driver)
         {
             Driver = driver;
         }
@@ -45,11 +44,6 @@ namespace Ariane.Drivers
                         (key, d) => ((WebDriverBindings) d).Driver.FindElementsByCssSelector(key)),
                 };
             }
-        }
-
-        public static implicit operator WebDriverBindings(RemoteWebDriver driver)
-        {
-            return new WebDriverBindings(driver);
         }
     }
 }

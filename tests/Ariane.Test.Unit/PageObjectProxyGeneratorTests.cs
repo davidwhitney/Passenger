@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
 using Ariane.Drivers;
 using Ariane.ModelInterception;
 using Castle.DynamicProxy;
+using Moq;
 using NUnit.Framework;
-using OpenQA.Selenium.Remote;
 
 namespace Ariane.Test.Unit
 {
     [TestFixture]
     public class PageObjectProxyGeneratorTests
     {
-        private RemoteWebDriver _fakeDriver;
+        private IDriverBindings _fakeDriver;
 
         [SetUp]
         public void Setup()
         {
-            _fakeDriver = (RemoteWebDriver)FormatterServices.GetUninitializedObject(typeof (RemoteWebDriver));
+            _fakeDriver = new Mock<IDriverBindings>().Object;
         }
 
         [Test]
@@ -31,7 +30,7 @@ namespace Ariane.Test.Unit
         [Test]
         public void Generate_PassedNullDriverBindings_Throws()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => PageObjectProxyGenerator.Generate<PopgTestObject>((DriverBindings)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => PageObjectProxyGenerator.Generate<PopgTestObject>(null));
 
             Assert.That(ex.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: driver"));
         }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
 using Ariane.Attributes;
+using Ariane.Drivers;
 using Ariane.ModelInterception;
 using Castle.DynamicProxy;
+using Moq;
 using NUnit.Framework;
-using OpenQA.Selenium.Remote;
 
 namespace Ariane.Test.Unit
 {
@@ -19,8 +19,8 @@ namespace Ariane.Test.Unit
         public void Setup()
         {
             // This sucks but it's realistic - intercept is called deep down.
-            var fakeDriver = (RemoteWebDriver)FormatterServices.GetUninitializedObject(typeof(RemoteWebDriver));
-            _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
+            var fakeDriver = new Mock<IDriverBindings>();
+            _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver.Object);
             _interceptor = ((IInterceptor[])_proxy.GetType().GetFields().Single(x => x.Name == "__interceptors").GetValue(_proxy)).Single();
         }
 

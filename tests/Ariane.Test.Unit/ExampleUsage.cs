@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ariane.Attributes;
+using Ariane.Drivers;
+using Ariane.Drivers.RemoteWebDriver;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
@@ -16,10 +18,10 @@ namespace Ariane.Test.Unit
         [SetUp]
         public void Setup()
         {
-            _testConfig = new ArianeConfiguration(new PhantomJSDriver())
+            _testConfig = new ArianeConfiguration
             {
                 WebRoot = "http://www.davidwhitney.co.uk"
-            };
+            }.WithDriver(new PhantomJSDriver());
         }
 
         [TearDown]

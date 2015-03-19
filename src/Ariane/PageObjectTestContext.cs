@@ -8,12 +8,12 @@ namespace Ariane
 {
     public class PageObjectTestContext<TPageObjectType> : IDisposable where TPageObjectType : class
     {
-        public DriverBindings Driver { get; set; }
+        public IDriverBindings Driver { get; set; }
         public string WebRoot { get; set; }
 
         private object _currentProxy;
 
-        public PageObjectTestContext(DriverBindings driver, string webRoot)
+        public PageObjectTestContext(IDriverBindings driver, string webRoot)
         {
             Driver = driver;
             WebRoot = webRoot;

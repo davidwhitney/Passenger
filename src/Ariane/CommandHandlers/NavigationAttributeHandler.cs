@@ -8,10 +8,10 @@ namespace Ariane.CommandHandlers
 {
     public class NavigationAttributeHandler : IHandleNavigation
     {
-        private readonly DriverBindings _driver;
+        private readonly IDriverBindings _driver;
         private readonly Attribute _attr;
 
-        public NavigationAttributeHandler(Attribute attr, DriverBindings driver)
+        public NavigationAttributeHandler(Attribute attr, IDriverBindings driver)
         {
             _driver = driver;
             _attr = attr;

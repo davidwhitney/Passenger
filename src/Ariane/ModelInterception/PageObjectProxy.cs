@@ -10,9 +10,9 @@ namespace Ariane.ModelInterception
 {
     public class PageObjectProxy : IInterceptor
     {
-        private readonly DriverBindings _driver;
+        private readonly IDriverBindings _driver;
 
-        public PageObjectProxy(DriverBindings driver)
+        public PageObjectProxy(IDriverBindings driver)
         {
             _driver = driver;
         }
