@@ -29,7 +29,7 @@ namespace Ariane.Test.Unit
         }
 
         [Test]
-        public void ExampleUsage()
+        public void ExampleUsageTest()
         {
             _ctx = _testConfig.StartTestAt<Homepage>();
 
