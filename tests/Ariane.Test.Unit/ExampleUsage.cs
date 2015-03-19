@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ariane.Attributes;
-using Ariane.Drivers;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
@@ -17,10 +16,9 @@ namespace Ariane.Test.Unit
         [SetUp]
         public void Setup()
         {
-            _testConfig = new ArianeConfiguration
+            _testConfig = new ArianeConfiguration(new PhantomJSDriver())
             {
-                Driver = () => new WebDriverBindings(new PhantomJSDriver()),
-                WebRoot = () => "http://www.davidwhitney.co.uk"
+                WebRoot = "http://www.davidwhitney.co.uk"
             };
         }
 
@@ -31,7 +29,7 @@ namespace Ariane.Test.Unit
         }
 
         [Test]
-        public void CanGenerateAProxy()
+        public void ExampleUsage()
         {
             _ctx = _testConfig.StartTestAt<Homepage>();
 
