@@ -6,7 +6,8 @@ namespace Ariane.Drivers
     public interface IDriverBindings
     {
         string Url { get; }
-        IEnumerable<DriverBindings.IHandle> NavigationHandlers { get; }
+        IList<DriverBindings.IHandle> NavigationHandlers { get; }
+        IList<DriverBindings.TypeSubstitution> Substitutes { get; } 
         void NavigateTo(Uri url);
         void Dispose();
     }

@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistration.cs" />
     <Compile Include="Attributes\CssSelectorAttribute.cs" />
@@ -59,7 +60,6 @@
     <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
-    <Compile Include="CommandHandlers\IHandleNavigation.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
     <Compile Include="ModelInterception\InvocationExtensions.cs" />
     <Compile Include="ModelInterception\PageObjectProxyGenerator.cs" />

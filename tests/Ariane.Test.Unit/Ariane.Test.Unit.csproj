@@ -59,8 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExampleUsage.cs" />
-    <Compile Include="PageObjectProxyGeneratorTests.cs" />
-    <Compile Include="PageObjectProxyTests.cs" />
+    <Compile Include="ModelInterception\PageObjectProxyGeneratorTests.cs" />
+    <Compile Include="ModelInterception\PageObjectProxyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

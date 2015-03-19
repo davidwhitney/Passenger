@@ -6,7 +6,7 @@ using Castle.DynamicProxy;
 using Moq;
 using NUnit.Framework;
 
-namespace Ariane.Test.Unit
+namespace Ariane.Test.Unit.ModelInterception
 {
     [TestFixture]
     public class PageObjectProxyGeneratorTests

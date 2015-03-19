@@ -11,10 +11,12 @@ namespace Ariane.ModelInterception
     public class PageObjectProxy : IInterceptor
     {
         private readonly IDriverBindings _driver;
+        private TypeSubstitutionHandler _typeSubstitution;
 
         public PageObjectProxy(IDriverBindings driver)
         {
             _driver = driver;
+            _typeSubstitution = new TypeSubstitutionHandler(_driver);
         }
 
         public void Intercept(IInvocation invocation)
@@ -26,6 +28,13 @@ namespace Ariane.ModelInterception
             }
 
             var property = invocation.ToPropertyInfo();
+
+            var match = _typeSubstitution.FindSubstituteFor(property);
+            if (match != null)
+            {
+                invocation.ReturnValue = match.GetInstance();
+                return;
+            }
 
             var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
             if (!attributes.Any())
@@ -45,7 +54,7 @@ namespace Ariane.ModelInterception
             }
 
             var handler = new NavigationAttributeHandler(attributes.First(), _driver);
-            var selectionHandlerResult = handler.InvokeDriver(property);
+            var selectionHandlerResult = handler.Invoke(property);
             if (selectionHandlerResult == null)
             {
                 invocation.Proceed();

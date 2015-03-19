@@ -6,7 +6,7 @@ using Ariane.Drivers;
 
 namespace Ariane.CommandHandlers
 {
-    public class NavigationAttributeHandler : IHandleNavigation
+    public class NavigationAttributeHandler
     {
         private readonly IDriverBindings _driver;
         private readonly Attribute _attr;
@@ -17,7 +17,7 @@ namespace Ariane.CommandHandlers
             _attr = attr;
         }
 
-        public object InvokeDriver(PropertyInfo property)
+        public object Invoke(PropertyInfo property)
         {
             var attributeHandler = _driver.NavigationHandlers.SingleOrDefault(map => _attr.GetType() == map.AttributeType);
             

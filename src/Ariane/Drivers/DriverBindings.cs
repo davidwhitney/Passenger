@@ -6,9 +6,11 @@ namespace Ariane.Drivers
     public abstract class DriverBindings : IDisposable, IDriverBindings
     {
         public abstract string Url { get; }
+
         public abstract void NavigateTo(Uri url);
         public abstract void Dispose();
-        public abstract IEnumerable<IHandle> NavigationHandlers { get; }
+        public abstract IList<IHandle> NavigationHandlers { get; }
+        public abstract IList<TypeSubstitution> Substitutes { get; }
 
         public class Handle<TAttributeType> : IHandle
         {
@@ -20,6 +22,18 @@ namespace Ariane.Drivers
             {
                 GetLookupValue = getLookupValue;
                 FindAllMatches = findAllMatches;
+            }
+        }
+
+        public class TypeSubstitution
+        {
+            public Type Type { get; set; }
+            public Func<object> GetInstance { get; set; }
+
+            public TypeSubstitution(Type type, Func<object> getInstance)
+            {
+                Type = type;
+                GetInstance = getInstance;
             }
         }
 

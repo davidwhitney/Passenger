@@ -25,7 +25,19 @@ namespace Ariane.Drivers.RemoteWebDriver
             Driver.Dispose();
         }
 
-        public override IEnumerable<IHandle> NavigationHandlers
+        public override IList<TypeSubstitution> Substitutes
+        {
+            get
+            {
+                return new List<TypeSubstitution>
+                {
+                    new TypeSubstitution(typeof(OpenQA.Selenium.Remote.RemoteWebDriver), ()=> Driver),
+                    new TypeSubstitution(typeof(OpenQA.Selenium.IWebDriver), ()=> Driver),
+                };
+            }
+        }
+
+        public override IList<IHandle> NavigationHandlers
         {
             get
             {
