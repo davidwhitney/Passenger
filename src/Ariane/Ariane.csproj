@@ -59,8 +59,6 @@
     <Compile Include="CommandHandlers\NavigationAttributeHandler.cs" />
     <Compile Include="CommandHandlers\IHandleNavigation.cs" />
     <Compile Include="InvocationExtensions.cs" />
-    <Compile Include="IPageObject.cs" />
-    <Compile Include="NavigationHandlerRegistry.cs" />
     <Compile Include="PageObjectProxyGenerator.cs" />
     <Compile Include="ArianeConfiguration.cs" />
     <Compile Include="PageObjectProxy.cs" />

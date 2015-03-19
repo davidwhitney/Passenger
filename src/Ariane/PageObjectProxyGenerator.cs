@@ -1,4 +1,5 @@
-﻿using Castle.DynamicProxy;
+﻿using System;
+using Castle.DynamicProxy;
 using OpenQA.Selenium.Remote;
 
 namespace Ariane
@@ -7,10 +8,13 @@ namespace Ariane
     {
         public static TPageObjectType Generate<TPageObjectType>(RemoteWebDriver driver) where TPageObjectType : class
         {
-            var handlerRegistry = new NavigationHandlerRegistry();
+            if (driver == null)
+            {
+                throw new ArgumentNullException("driver");
+            }
 
             var generator = new ProxyGenerator();
-            var pageObjectProxy = new PageObjectProxy(driver, handlerRegistry);
+            var pageObjectProxy = new PageObjectProxy(driver);
             return generator.CreateClassProxy<TPageObjectType>(pageObjectProxy);
         }
     }
