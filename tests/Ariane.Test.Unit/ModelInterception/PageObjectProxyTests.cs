@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Ariane.Attributes;
 using Ariane.Drivers;
 using Ariane.ModelInterception;
-using Castle.DynamicProxy;
 using Moq;
 using NUnit.Framework;
 
@@ -13,7 +11,6 @@ namespace Ariane.Test.Unit.ModelInterception
     [TestFixture]
     public class PageObjectProxyTests
     {
-        private IInterceptor _interceptor;
         private InterceptedType _proxy;
 
         [SetUp]
@@ -28,7 +25,6 @@ namespace Ariane.Test.Unit.ModelInterception
             });
 
             _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver.Object);
-            _interceptor = ((IInterceptor[])_proxy.GetType().GetFields().Single(x => x.Name == "__interceptors").GetValue(_proxy)).Single();
         }
 
         [Test]
@@ -86,6 +82,18 @@ namespace Ariane.Test.Unit.ModelInterception
             Assert.That(value.Val, Is.EqualTo("Hi"));
         }
 
+        [Test]
+        public void Intercept_FieldHasMappedNvaigationHandler_ReturnsValueFromHandler()
+        {
+            var fakeDriver = new TotallyFakeWebDriver();
+            fakeDriver.NavigationHandlers.Add(new DriverBindings.Handle<IdAttribute>(attribute => null, (s, bindings) => "value"));
+            var proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
+
+            var selectorFromId = proxy.IdAttributed;
+
+            Assert.That(selectorFromId, Is.EqualTo("value"));
+        }
+
         public class InterceptedType
         {
             [Id]
@@ -117,5 +125,4 @@ namespace Ariane.Test.Unit.ModelInterception
             }
         }
     }
-
 }

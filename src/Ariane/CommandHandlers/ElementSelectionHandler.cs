@@ -23,7 +23,11 @@ namespace Ariane.CommandHandlers
             }
 
             var attributeHandler = _driver.NavigationHandlers.SingleOrDefault(map => attr.GetType() == map.AttributeType);
-            
+            if (attributeHandler == null)
+            {
+                return null;
+            }
+
             var textValue = attributeHandler.GetLookupValue(attr);
             var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
             var allMatches = attributeHandler.FindAllMatches(key, _driver);
