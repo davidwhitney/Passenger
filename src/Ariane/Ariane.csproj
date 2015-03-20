@@ -51,15 +51,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\NavigationAttributeBase.cs" />
     <Compile Include="Attributes\PageComponentAttribute.cs" />
+    <Compile Include="Attributes\NavigationAttributes.cs" />
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedException.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistration.cs" />
-    <Compile Include="Attributes\CssSelectorAttribute.cs" />
-    <Compile Include="Attributes\IdAttribute.cs" />
-    <Compile Include="Attributes\NameAttribute.cs" />
-    <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />

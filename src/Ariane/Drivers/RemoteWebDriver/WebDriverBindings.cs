@@ -43,12 +43,19 @@ namespace Ariane.Drivers.RemoteWebDriver
             {
                 return new List<IHandle>
                 {
-                    new Handle<IdAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsById(key)),
-                    new Handle<NameAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByName(key)),
-                    new Handle<TextAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByLinkText(key)),
-                    new Handle<CssSelectorAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByCssSelector(key)),
+                    new Handle<IdAttribute>((key, d) => WebDriver(d).FindElementsById(key)),
+                    new Handle<NameAttribute>((key, d) => WebDriver(d).FindElementsByName(key)),
+                    new Handle<TextAttribute>((key, d) => WebDriver(d).FindElementsByLinkText(key)),
+                    new Handle<CssSelectorAttribute>((key, d) => WebDriver(d).FindElementsByCssSelector(key)),
+                    new Handle<XPathAttribute>((key, d) => WebDriver(d).FindElementsByXPath(key)),
+                    new Handle<TagNameAttribute>((key, d) => WebDriver(d).FindElementsByTagName(key)),
                 };
             }
+        }
+
+        private static OpenQA.Selenium.Remote.RemoteWebDriver WebDriver(IDriverBindings d)
+        {
+            return ((WebDriverBindings) d).Driver;
         }
     }
 }
