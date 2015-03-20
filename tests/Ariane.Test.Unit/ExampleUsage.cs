@@ -61,7 +61,7 @@ namespace Ariane.Test.Unit
         [Id]
         public virtual IWebElement middleWrapper { get; set; }
 
-        [Text]
+        [LinkText]
         public virtual IWebElement Blog { get; set; }
 
         public void FillInForm(string user)

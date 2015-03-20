@@ -26,7 +26,7 @@ namespace Ariane.Test.Unit.ModelInterception
             fakeDriver.Setup(x => x.NavigationHandlers).Returns(new List<DriverBindings.IHandle>
             {
                 new DriverBindings.Handle<IdAttribute>((s, d) => "an id string"),
-                new DriverBindings.Handle<TextAttribute>((s, d) => "a text string")
+                new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string")
             });
 
             _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver.Object);
@@ -147,7 +147,7 @@ namespace Ariane.Test.Unit.ModelInterception
         [PageComponent]
         public class MenuBar
         {
-            [Text]
+            [LinkText]
             public virtual string StringOnComponentThatIsInterceptedToo { get; set; }
         }
     }
