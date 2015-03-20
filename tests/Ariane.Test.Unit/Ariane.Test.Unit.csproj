@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\UriAttributeTests.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandlerTests.cs" />
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedExceptionTests.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandlerTests.cs" />
