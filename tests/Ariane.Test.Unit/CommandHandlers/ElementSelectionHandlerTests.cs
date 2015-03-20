@@ -31,6 +31,33 @@ namespace Ariane.Test.Unit.CommandHandlers
         }
 
         [Test]
+        public void SelectElement_AttributeNull_ReturnsNull()
+        {
+            var result =_handler.SelectElement(null, _someDivPropertyInfo);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SelectElement_PropertyInfoNull_ReturnsNull()
+        {
+            var result = _handler.SelectElement(_idAttribute, null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SelectElement_NoTextValueProvidedByAttribute_PropertyNamePassedToAttributeHandler()
+        {
+            string namePassedIn = "";
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => { namePassedIn = s; return "empty"; }));
+
+            _handler.SelectElement(_idAttribute, _someDivPropertyInfo);
+
+            Assert.That(namePassedIn, Is.EqualTo("SomeDiv"));
+        }
+
+        [Test]
         public void SelectElement_NoHandlerAvailableForNavigationAttribute_ThrowsExceptionWithImportantInformationInMessage()
         {
             var ex =

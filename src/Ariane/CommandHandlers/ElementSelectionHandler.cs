@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -32,14 +33,20 @@ namespace Ariane.CommandHandlers
             var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
             var allMatches = attributeHandler.FindAllMatches(key, _driver);
 
-            return IsCollection(property)
-                ? allMatches
-                : ((IEnumerable<object>) allMatches).SingleOrDefault();
+            if (IsCollection(property))
+            {
+                return allMatches;
+            }
+            
+            var enumerator = ((IEnumerable) allMatches).GetEnumerator();
+            enumerator.MoveNext();
+            return enumerator.Current;
         }
 
         private static bool IsCollection(PropertyInfo property)
         {
-            return property.PropertyType.GetInterfaces().Any(x => x.Name.ToLower().Contains("enumerable"));
+            var isCollection = property.PropertyType.GetInterfaces().Any(x => x.Name.ToLower().Contains("enumerable"));
+            return isCollection;
         }
     }
 }
