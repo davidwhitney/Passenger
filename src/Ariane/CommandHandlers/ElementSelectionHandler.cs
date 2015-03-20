@@ -25,7 +25,7 @@ namespace Ariane.CommandHandlers
             var attributeHandler = _driver.NavigationHandlers.SingleOrDefault(map => attr.GetType() == map.AttributeType);
             if (attributeHandler == null)
             {
-                return null;
+                throw new NavigationTypeNotSupportedException(attr);
             }
 
             var textValue = attr.ToString();
