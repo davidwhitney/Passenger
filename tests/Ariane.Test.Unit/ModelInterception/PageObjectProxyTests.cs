@@ -103,6 +103,18 @@ namespace Ariane.Test.Unit.ModelInterception
             Assert.That(component.GetType().BaseType, Is.EqualTo(typeof(MenuBar)));
         }
 
+        [Test]
+        public void Intercept_OnAPageComponent_ProxyFeaturesWork()
+        {
+            var fakeDriver = new TotallyFakeWebDriver();
+            fakeDriver.NavigationHandlers.Add(new DriverBindings.Handle<TextAttribute>(attribute => null, (s, bindings) => "value"));
+            var proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
+
+            var selectorFromId = proxy.TotallyAPageComponent.StringOnComponentThatIsInterceptedToo;
+
+            Assert.That(selectorFromId, Is.EqualTo("value"));
+        }
+
         public class InterceptedType
         {
             [Id]
@@ -139,7 +151,7 @@ namespace Ariane.Test.Unit.ModelInterception
         public class MenuBar
         {
             [Text]
-            public string StringOnComponentThatIsInterceptedToo { get; set; }
+            public virtual string StringOnComponentThatIsInterceptedToo { get; set; }
         }
     }
 }
