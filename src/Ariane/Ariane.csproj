@@ -61,7 +61,7 @@
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
-    <Compile Include="ModelInterception\InvocationExtensions.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="ModelInterception\PageObjectProxyGenerator.cs" />
     <Compile Include="ArianeConfiguration.cs" />
     <Compile Include="ModelInterception\PageObjectProxy.cs" />

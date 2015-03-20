@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Ariane.Attributes;
-using Ariane.ModelInterception;
 using NUnit.Framework;
 
-namespace Ariane.Test.Unit.ModelInterception
+namespace Ariane.Test.Unit
 {
     [TestFixture]
-    public class InvocationExtensionsTests
+    public class ReflectionExtensionsTests
     {
         [TestCase("AComponent", true)]
         [TestCase("NotAComponent", false)]

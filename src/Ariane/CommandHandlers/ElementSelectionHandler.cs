@@ -29,24 +29,23 @@ namespace Ariane.CommandHandlers
                 throw new NavigationTypeNotSupportedException(attr, property.Name);
             }
 
-            var textValue = attr.ToString();
-            var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
+            var key = string.IsNullOrWhiteSpace(attr.ToString()) ? property.Name : attr.ToString();
             var allMatches = attributeHandler.FindAllMatches(key, _driver);
 
-            if (IsCollection(property))
+            if (property.PropertyType == allMatches.GetType())
             {
                 return allMatches;
             }
-            
-            var enumerator = ((IEnumerable) allMatches).GetEnumerator();
-            enumerator.MoveNext();
-            return enumerator.Current;
-        }
 
-        private static bool IsCollection(PropertyInfo property)
-        {
-            var isCollection = property.PropertyType.GetInterfaces().Any(x => x.Name.ToLower().Contains("enumerable"));
-            return isCollection;
+            if (!property.PropertyType.IsCollection() 
+                && allMatches.GetType().IsCollection())
+            {
+                var enumerator = ((IEnumerable) allMatches).GetEnumerator();
+                enumerator.MoveNext();
+                return enumerator.Current;
+            }
+
+            return allMatches;
         }
     }
 }

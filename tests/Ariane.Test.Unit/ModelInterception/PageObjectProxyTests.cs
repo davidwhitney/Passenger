@@ -88,7 +88,7 @@ namespace Ariane.Test.Unit.ModelInterception
         }
 
         [Test]
-        public void Intercept_FieldHasMappedNvaigationHandler_ReturnsValueFromHandler()
+        public void Intercept_FieldHasMappedNavigationHandler_ReturnsValueFromHandler()
         {
             var selectorFromId = _proxy.PropertyWithIdAttribute;
 

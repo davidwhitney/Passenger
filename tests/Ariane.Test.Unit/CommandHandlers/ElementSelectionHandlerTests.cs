@@ -17,6 +17,7 @@ namespace Ariane.Test.Unit.CommandHandlers
         private PropertyInfo _someDivPropertyInfo;
         private IdAttribute _idAttribute;
         private List<DriverBindings.IHandle> _navHandlers;
+        private List<string> _collection;
 
         [SetUp]
         public void Setup()
@@ -68,10 +69,44 @@ namespace Ariane.Test.Unit.CommandHandlers
             Assert.That(ex.Message, Is.StringContaining("SomeDiv"));
         }
 
+        [Test]
+        public void SelectElement_TargetTypeIsACollection_CollectionReturned()
+        {
+            var stringsPi = typeof(SelectionTestClass).GetProperty("Strings");
+            var idFromStrings = stringsPi.GetCustomAttribute<IdAttribute>();
+            _collection = new List<string> {"1", "2", "3"};
+
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => _collection));
+
+            var selected = _handler.SelectElement(idFromStrings, stringsPi);
+
+            Assert.That(selected, Is.EqualTo(_collection));
+        }
+
+        [Test]
+        public void SelectElement_TargetTypeIsASingleElementAndCollectionFound_FirstItemReturned()
+        {
+            var stringsPi = typeof(SelectionTestClass).GetProperty("String");
+            var idFromStrings = stringsPi.GetCustomAttribute<IdAttribute>();
+            _collection = new List<string> {"1", "2", "3"};
+
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => _collection));
+
+            var selected = _handler.SelectElement(idFromStrings, stringsPi);
+
+            Assert.That(selected, Is.EqualTo(_collection[0]));
+        }
+
         public class SelectionTestClass
         {
             [Id]
             public virtual IWebElement SomeDiv { get; set; }
+
+            [Id]
+            public virtual List<string> Strings { get; set; } 
+
+            [Id]
+            public virtual string String { get; set; } 
         }
     }
 }
