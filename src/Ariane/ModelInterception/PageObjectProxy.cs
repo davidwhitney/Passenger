@@ -24,13 +24,13 @@ namespace Ariane.ModelInterception
 
         public void Intercept(IInvocation invocation)
         {
-            if (!invocation.IsProperty())
+            if (!invocation.Method.IsProperty())
             {
                 invocation.Proceed();
                 return;
             }
 
-            var result = InterceptProperty(invocation, invocation.ToPropertyInfo());
+            var result = InterceptProperty(invocation, invocation.Method.ToPropertyInfo());
             if (result == InvocationResult.Proceed)
             {
                 invocation.Proceed();
@@ -52,7 +52,7 @@ namespace Ariane.ModelInterception
                 {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
                 {() => !attributes.Any(), () => InvocationResult.Proceed },
                 {() => attributes.Count > 1, () => {throw new Exception("Only one selection attribute is valid per property.");} },
-                {() => invocation.IsSetProperty(), () => {throw new Exception("You can't set a property that has a selection attribute.");} },
+                {() => invocation.Method.IsSetProperty(), () => {throw new Exception("You can't set a property that has a selection attribute.");} },
                 {() => _elementSelectionHandler.SelectElement(firstAttribute, property) == null, () => InvocationResult.Proceed },
             };
 

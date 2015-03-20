@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistrationTests.cs" />
     <Compile Include="ExampleUsage.cs" />
+    <Compile Include="ModelInterception\InvocationExtensionsTests.cs" />
     <Compile Include="ModelInterception\PageObjectProxyGeneratorTests.cs" />
     <Compile Include="ModelInterception\PageObjectProxyTests.cs" />
     <Compile Include="ModelInterception\TotallyFakeWebDriver.cs" />

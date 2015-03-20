@@ -9,20 +9,20 @@ namespace Ariane.ModelInterception
 {
     public static class InvocationExtensions
     {
-        public static bool IsProperty(this IInvocation invocation)
+        public static bool IsProperty(this MemberInfo invocation)
         {
-            return invocation.Method.Name.StartsWith("get_") || invocation.IsSetProperty();
+            return invocation.Name.StartsWith("get_") || invocation.IsSetProperty();
         }
 
-        public static bool IsSetProperty(this IInvocation invocation)
+        public static bool IsSetProperty(this MemberInfo invocation)
         {
-            return invocation.Method.Name.StartsWith("set_");
+            return invocation.Name.StartsWith("set_");
         }
 
-        public static PropertyInfo ToPropertyInfo(this IInvocation invocation)
+        public static PropertyInfo ToPropertyInfo(this MethodInfo invocation)
         {
-            var declaringType = invocation.Method.DeclaringType;
-            var propertyName = invocation.Method.Name.Remove(0, 4);
+            var declaringType = invocation.DeclaringType;
+            var propertyName = invocation.Name.Remove(0, 4);
             return declaringType.GetProperty(propertyName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
