@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandlers\ElementSelectionHandlerTests.cs" />
+    <Compile Include="CommandHandlers\NavigationTypeNotSupportedExceptionTests.cs" />
+    <Compile Include="CommandHandlers\TypeSubstitutionHandlerTests.cs" />
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistrationTests.cs" />
     <Compile Include="ExampleUsage.cs" />
     <Compile Include="ReflectionExtensionsTests.cs" />

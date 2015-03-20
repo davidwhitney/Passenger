@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using Ariane.Drivers;
@@ -16,7 +17,7 @@ namespace Ariane.CommandHandlers
             _driver = driver;
         }
 
-        public DriverBindings.TypeSubstitution FindSubstituteFor(PropertyInfo property)
+        public DriverBindings.TypeSubstitution FindSubstituteFor(Type type)
         {
             if (_driver == null || _driver.Substitutes == null)
             {
@@ -28,7 +29,7 @@ namespace Ariane.CommandHandlers
                 return null;
             }
 
-            return _driver.Substitutes.ToList().SingleOrDefault(map => property.PropertyType == map.Type);
+            return _driver.Substitutes.ToList().SingleOrDefault(map => type == map.Type);
         }
     }
 }

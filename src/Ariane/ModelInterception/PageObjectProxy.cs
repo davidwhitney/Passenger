@@ -35,7 +35,7 @@ namespace Ariane.ModelInterception
 
             var result = new InvocationSwitchboard
             {
-                {() => _typeSubstitution.FindSubstituteFor(property) != null, () => InvocationResult.Assign(_typeSubstitution.FindSubstituteFor(property).GetInstance())},
+                {() => _typeSubstitution.FindSubstituteFor(property.PropertyType) != null, () => InvocationResult.Assign(_typeSubstitution.FindSubstituteFor(property.PropertyType).GetInstance())},
                 {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
                 {() => !attributes.Any(), () => InvocationResult.Proceed},
                 {() => attributes.Count > 1, () => { throw new Exception("Only one selection attribute is valid per property."); }},
