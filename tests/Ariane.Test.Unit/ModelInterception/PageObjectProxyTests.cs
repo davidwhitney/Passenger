@@ -16,7 +16,7 @@ namespace Ariane.Test.Unit.ModelInterception
         [SetUp]
         public void Setup()
         {
-            // This sucks but it's realistic - intercept is called deep down.
+            // It's hard to hand construct a proxy - so we'll go via the proxy generator.
             var fakeDriver = new Mock<IDriverBindings>();
             fakeDriver.Setup(x => x.Substitutes).Returns(new List<DriverBindings.TypeSubstitution>
             {
@@ -30,9 +30,9 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_ToPropertyWithoutAttribute_RegularValueReturned()
         {
-            _proxy.AString = "abc";
+            _proxy.RegularOldString = "abc";
 
-            var value = _proxy.AString;
+            var value = _proxy.RegularOldString;
 
             Assert.That(value, Is.EqualTo("abc"));
         }
@@ -50,7 +50,7 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_ToMethod_RegularValueReturned()
         {
-            var value = _proxy.AMethod();
+            var value = _proxy.RegularUnremarkableMethod();
 
             Assert.That(value, Is.EqualTo("method return"));
         }
@@ -58,7 +58,7 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_SetFieldWithIdAttribute_Throws()
         {
-            var ex = Assert.Throws<Exception>(() => _proxy.IdAttributed = "here's a value");
+            var ex = Assert.Throws<Exception>(() => _proxy.PropertyWithIdAttribute = "here's a value");
 
             Assert.That(ex.Message, Is.EqualTo("You can't set a property that has a selection attribute."));
         }
@@ -68,7 +68,7 @@ namespace Ariane.Test.Unit.ModelInterception
         {
             var ex = Assert.Throws<Exception>(() =>
             {
-                var temp =_proxy.MultiAttributed;
+                var temp =_proxy.PropertyThatThrowsOnAccessDueToMultipleAttributes;
             });
 
             Assert.That(ex.Message, Is.EqualTo("Only one selection attribute is valid per property."));
@@ -77,7 +77,7 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_FieldIsForRegisteredSubstitutedType_TypeIsSubbed()
         {
-            var value = _proxy.ASubstitutedType;
+            var value = _proxy.ATypeThatIsRegisteredForSubstitution;
 
             Assert.That(value.Val, Is.EqualTo("Hi"));
         }
@@ -89,21 +89,30 @@ namespace Ariane.Test.Unit.ModelInterception
             fakeDriver.NavigationHandlers.Add(new DriverBindings.Handle<IdAttribute>(attribute => null, (s, bindings) => "value"));
             var proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
 
-            var selectorFromId = proxy.IdAttributed;
+            var selectorFromId = proxy.PropertyWithIdAttribute;
 
             Assert.That(selectorFromId, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void Intercept_ClassIsPageComponent_ProxyGenerated()
+        {
+            var component = _proxy.TotallyAPageComponent;
+
+            Assert.That(component, Is.Not.Null);
+            Assert.That(component.GetType().BaseType, Is.EqualTo(typeof(MenuBar)));
         }
 
         public class InterceptedType
         {
             [Id]
-            public virtual string IdAttributed { get; set; }
+            public virtual string PropertyWithIdAttribute { get; set; }
 
             [Id]
             [CssSelector]
-            public virtual string MultiAttributed { get; set; }
+            public virtual string PropertyThatThrowsOnAccessDueToMultipleAttributes { get; set; }
 
-            public virtual string AString { get; set; }
+            public virtual string RegularOldString { get; set; }
 
             private string _fieldBacked;
             public virtual string FieldBacked
@@ -112,17 +121,25 @@ namespace Ariane.Test.Unit.ModelInterception
                 set { _fieldBacked = value; }
             }
 
-            public virtual string AMethod()
+            public virtual string RegularUnremarkableMethod()
             {
                 return "method return";
             }
 
-            public virtual SubbedType ASubstitutedType { get; set; }
+            public virtual MenuBar TotallyAPageComponent { get; set; }
+            public virtual SubbedType ATypeThatIsRegisteredForSubstitution { get; set; }
 
             public class SubbedType
             {
                 public string Val { get; set; }
             }
+        }
+
+        [PageComponent]
+        public class MenuBar
+        {
+            [Text]
+            public string StringOnComponentThatIsInterceptedToo { get; set; }
         }
     }
 }

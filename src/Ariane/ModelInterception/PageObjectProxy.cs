@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Ariane.Attributes;
 using Ariane.CommandHandlers;
 using Ariane.Drivers;
 using Castle.DynamicProxy;
@@ -10,11 +11,13 @@ namespace Ariane.ModelInterception
 {
     public class PageObjectProxy : IInterceptor
     {
+        private readonly IDriverBindings _driver;
         private readonly TypeSubstitutionHandler _typeSubstitution;
         private readonly ElementSelectionHandler _elementSelectionHandler;
 
         public PageObjectProxy(IDriverBindings driver)
         {
+            _driver = driver;
             _typeSubstitution = new TypeSubstitutionHandler(driver);
             _elementSelectionHandler = new ElementSelectionHandler(driver);
         }
@@ -46,6 +49,7 @@ namespace Ariane.ModelInterception
             var validations = new Dictionary<Func<bool>, Func<InvocationResult>>
             {
                 {() => typeSubstitution != null, () => InvocationResult.Assign(typeSubstitution.GetInstance())},
+                {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
                 {() => !attributes.Any(), () => InvocationResult.Proceed },
                 {() => attributes.Count > 1, () => {throw new Exception("Only one selection attribute is valid per property.");} },
                 {() => invocation.IsSetProperty(), () => {throw new Exception("You can't set a property that has a selection attribute.");} },
@@ -59,6 +63,11 @@ namespace Ariane.ModelInterception
 
             var selectionHandlerResult = _elementSelectionHandler.SelectElement(attributes.First(), property);
             return InvocationResult.Assign(selectionHandlerResult);
+        }
+
+        private object GenerateComponentProxy(PropertyInfo property)
+        {
+            return PageObjectProxyGenerator.Generate(property.PropertyType, _driver);
         }
 
         public class InvocationResult

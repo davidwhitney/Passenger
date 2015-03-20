@@ -41,7 +41,7 @@ namespace Ariane.Test.Unit
 
             _ctx.Page<Homepage>().Blog.Click();
             _ctx.VerifyRedirectionTo<Blog>();
-
+            
             foreach (var post in _ctx.Page<Blog>().Posts)
             {
                 Console.WriteLine(post.Text);

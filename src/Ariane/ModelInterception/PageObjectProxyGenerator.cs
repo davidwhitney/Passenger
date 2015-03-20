@@ -8,6 +8,11 @@ namespace Ariane.ModelInterception
     {
         public static TPageObjectType Generate<TPageObjectType>(IDriverBindings driver) where TPageObjectType : class
         {
+            return (TPageObjectType)Generate(typeof (TPageObjectType), driver);
+        }
+
+        public static object Generate(Type propertyType, IDriverBindings driver)
+        {
             if (driver == null)
             {
                 throw new ArgumentNullException("driver");
@@ -15,7 +20,7 @@ namespace Ariane.ModelInterception
 
             var generator = new ProxyGenerator();
             var pageObjectProxy = new PageObjectProxy(driver);
-            return generator.CreateClassProxy<TPageObjectType>(pageObjectProxy);
+            return generator.CreateClassProxy(propertyType, pageObjectProxy);
         }
     }
 }

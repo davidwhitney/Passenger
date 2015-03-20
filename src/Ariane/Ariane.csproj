@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\PageComponentAttribute.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistration.cs" />
