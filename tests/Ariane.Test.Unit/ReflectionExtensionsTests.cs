@@ -49,6 +49,7 @@ namespace Ariane.Test.Unit
 
             Assert.That(propertyInfo, Is.Not.Null);
             Assert.That(propertyInfo.Name, Is.EqualTo("AProperty"));
+            new SomePom().NotAProperty();
         }
 
         public class SomePom
