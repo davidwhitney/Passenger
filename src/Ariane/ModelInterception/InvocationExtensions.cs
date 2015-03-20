@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Ariane.Attributes;
-using Castle.DynamicProxy;
 
 namespace Ariane.ModelInterception
 {

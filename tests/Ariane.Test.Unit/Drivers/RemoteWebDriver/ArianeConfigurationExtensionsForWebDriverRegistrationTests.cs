@@ -10,12 +10,11 @@ namespace Ariane.Test.Unit.Drivers.RemoteWebDriver
         [Test]
         public void WithDriver__GivenDriver_AssignsDriver()
         {
-            using (var driver = new PhantomJSDriver())
-            {
-                var cfg = new ArianeConfiguration().WithDriver(driver);
+            var driver = (PhantomJSDriver) System.Runtime.Serialization.FormatterServices.GetSafeUninitializedObject(typeof (PhantomJSDriver)); // Sorry mom
+            
+            var cfg = new ArianeConfiguration().WithDriver(driver);
 
-                Assert.That(cfg.Driver, Is.InstanceOf<WebDriverBindings>());
-            }
+            Assert.That(cfg.Driver, Is.InstanceOf<WebDriverBindings>());
         }
     }
 }

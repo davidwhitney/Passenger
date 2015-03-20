@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Ariane.Attributes;
 using Ariane.CommandHandlers;
 using Ariane.Drivers;
 using Castle.DynamicProxy;
@@ -30,44 +29,53 @@ namespace Ariane.ModelInterception
                 return;
             }
 
-            var result = InterceptProperty(invocation, invocation.Method.ToPropertyInfo());
+            var property = invocation.Method.ToPropertyInfo();
+            var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
+            var firstAttribute = attributes.FirstOrDefault();
+
+            var result = new InvocationSwitchboard
+            {
+                {() => _typeSubstitution.FindSubstituteFor(property) != null, () => InvocationResult.Assign(_typeSubstitution.FindSubstituteFor(property).GetInstance())},
+                {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
+                {() => !attributes.Any(), () => InvocationResult.Proceed},
+                {() => attributes.Count > 1, () => { throw new Exception("Only one selection attribute is valid per property."); }},
+                {() => invocation.Method.IsSetProperty(), () => { throw new Exception("You can't set a property that has a selection attribute."); }},
+                {() => _elementSelectionHandler.SelectElement(firstAttribute, property) == null, () => InvocationResult.Proceed },
+                {
+                    () => _elementSelectionHandler.SelectElement(firstAttribute, property) != null,
+                    () => InvocationResult.Assign(_elementSelectionHandler.SelectElement(attributes.First(), property))
+                },
+            }.Route();
+
+            Invoke(invocation, result);
+        }
+
+        private static void Invoke(IInvocation invocation, InvocationResult result)
+        {
             if (result == InvocationResult.Proceed)
             {
                 invocation.Proceed();
                 return;
             }
-         
+
             invocation.ReturnValue = result.Value;
-        }
-
-        public InvocationResult InterceptProperty(IInvocation invocation, PropertyInfo property)
-        {
-            var typeSubstitution = _typeSubstitution.FindSubstituteFor(property);
-            var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
-            var firstAttribute = attributes.FirstOrDefault();
-
-            var validations = new Dictionary<Func<bool>, Func<InvocationResult>>
-            {
-                {() => typeSubstitution != null, () => InvocationResult.Assign(typeSubstitution.GetInstance())},
-                {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
-                {() => !attributes.Any(), () => InvocationResult.Proceed },
-                {() => attributes.Count > 1, () => {throw new Exception("Only one selection attribute is valid per property.");} },
-                {() => invocation.Method.IsSetProperty(), () => {throw new Exception("You can't set a property that has a selection attribute.");} },
-                {() => _elementSelectionHandler.SelectElement(firstAttribute, property) == null, () => InvocationResult.Proceed },
-            };
-
-            foreach (var rule in validations.Where(rule => rule.Key()))
-            {
-                return rule.Value();
-            }
-
-            var selectionHandlerResult = _elementSelectionHandler.SelectElement(attributes.First(), property);
-            return InvocationResult.Assign(selectionHandlerResult);
         }
 
         private object GenerateComponentProxy(PropertyInfo property)
         {
             return PageObjectProxyGenerator.Generate(property.PropertyType, _driver);
+        }
+
+        private class InvocationSwitchboard : Dictionary<Func<bool>, Func<InvocationResult>>
+        {
+            public InvocationResult Route()
+            {
+                foreach (var rule in this.Where(rule => rule.Key()))
+                {
+                    return rule.Value();
+                }
+                return InvocationResult.Proceed;
+            }
         }
 
         public class InvocationResult

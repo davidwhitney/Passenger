@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Ariane.Attributes;
 using Ariane.Drivers.RemoteWebDriver;
 using NUnit.Framework;
@@ -10,6 +9,7 @@ using OpenQA.Selenium.Remote;
 
 namespace Ariane.Test.Unit
 {
+    [Ignore("Demo test")]
     [TestFixture]
     public class ExampleUsage
     {
