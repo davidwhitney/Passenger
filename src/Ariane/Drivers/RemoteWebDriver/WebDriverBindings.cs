@@ -43,17 +43,10 @@ namespace Ariane.Drivers.RemoteWebDriver
             {
                 return new List<IHandle>
                 {
-                    new Handle<IdAttribute>(a => ((IdAttribute) a).Id,
-                        (key, d) => ((WebDriverBindings) d).Driver.FindElementsById(key)),
-
-                    new Handle<NameAttribute>(a => ((NameAttribute) a).Name,
-                        (key, d) => ((WebDriverBindings) d).Driver.FindElementsByName(key)),
-
-                    new Handle<TextAttribute>(a => ((TextAttribute) a).String,
-                        (key, d) => ((WebDriverBindings) d).Driver.FindElementsByLinkText(key)),
-
-                    new Handle<CssSelectorAttribute>(a => ((CssSelectorAttribute) a).Selector,
-                        (key, d) => ((WebDriverBindings) d).Driver.FindElementsByCssSelector(key)),
+                    new Handle<IdAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsById(key)),
+                    new Handle<NameAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByName(key)),
+                    new Handle<TextAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByLinkText(key)),
+                    new Handle<CssSelectorAttribute>((key, d) => ((WebDriverBindings) d).Driver.FindElementsByCssSelector(key)),
                 };
             }
         }

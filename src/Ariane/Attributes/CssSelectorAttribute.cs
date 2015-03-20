@@ -10,5 +10,10 @@ namespace Ariane.Attributes
         {
             Selector = selector;
         }
+
+        public override string ToString()
+        {
+            return Selector;
+        }
     }
 }

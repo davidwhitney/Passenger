@@ -23,6 +23,11 @@ namespace Ariane.Test.Unit.ModelInterception
                 new DriverBindings.TypeSubstitution(typeof (InterceptedType.SubbedType),
                     () => new InterceptedType.SubbedType {Val = "Hi"})
             });
+            fakeDriver.Setup(x => x.NavigationHandlers).Returns(new List<DriverBindings.IHandle>
+            {
+                new DriverBindings.Handle<IdAttribute>((s, d) => "an id string"),
+                new DriverBindings.Handle<TextAttribute>((s, d) => "a text string")
+            });
 
             _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver.Object);
         }
@@ -85,13 +90,9 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_FieldHasMappedNvaigationHandler_ReturnsValueFromHandler()
         {
-            var fakeDriver = new TotallyFakeWebDriver();
-            fakeDriver.NavigationHandlers.Add(new DriverBindings.Handle<IdAttribute>(attribute => null, (s, bindings) => "value"));
-            var proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
+            var selectorFromId = _proxy.PropertyWithIdAttribute;
 
-            var selectorFromId = proxy.PropertyWithIdAttribute;
-
-            Assert.That(selectorFromId, Is.EqualTo("value"));
+            Assert.That(selectorFromId, Is.EqualTo("an id string"));
         }
 
         [Test]
@@ -106,13 +107,9 @@ namespace Ariane.Test.Unit.ModelInterception
         [Test]
         public void Intercept_OnAPageComponent_ProxyFeaturesWork()
         {
-            var fakeDriver = new TotallyFakeWebDriver();
-            fakeDriver.NavigationHandlers.Add(new DriverBindings.Handle<TextAttribute>(attribute => null, (s, bindings) => "value"));
-            var proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver);
+            var selectorFromId = _proxy.TotallyAPageComponent.StringOnComponentThatIsInterceptedToo;
 
-            var selectorFromId = proxy.TotallyAPageComponent.StringOnComponentThatIsInterceptedToo;
-
-            Assert.That(selectorFromId, Is.EqualTo("value"));
+            Assert.That(selectorFromId, Is.EqualTo("a text string"));
         }
 
         public class InterceptedType

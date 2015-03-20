@@ -10,5 +10,10 @@ namespace Ariane.Attributes
         {
             String = @string;
         }
+
+        public override string ToString()
+        {
+            return String;
+        }
     }
 }

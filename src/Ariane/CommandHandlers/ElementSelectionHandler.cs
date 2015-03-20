@@ -28,7 +28,7 @@ namespace Ariane.CommandHandlers
                 return null;
             }
 
-            var textValue = attributeHandler.GetLookupValue(attr);
+            var textValue = attr.ToString();
             var key = string.IsNullOrWhiteSpace(textValue) ? property.Name : textValue;
             var allMatches = attributeHandler.FindAllMatches(key, _driver);
 

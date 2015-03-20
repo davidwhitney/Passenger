@@ -10,5 +10,10 @@ namespace Ariane.Attributes
         {
             Id = id;
         }
+
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }
