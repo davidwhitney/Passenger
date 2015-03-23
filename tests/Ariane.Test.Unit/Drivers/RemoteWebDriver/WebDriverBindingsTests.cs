@@ -80,6 +80,25 @@ namespace Ariane.Test.Unit.Drivers.RemoteWebDriver
                 Assert.That(_fakeDriver.LastProvidedParameters["value"], Is.EqualTo("a"));
             }
         }
+
+        [Test]
+        public void Subsitutions_ProvideSubstituesForWebDriver()
+        {
+            foreach (var typeSubstitution in _bindings.Substitutes)
+            {
+                var instance = typeSubstitution.GetInstance();
+
+                Assert.That(instance, Is.TypeOf<TotallyFakeRemoteWebDriver>());
+            }
+        }
+
+        [Test]
+        public void Dispose_DisposesOfWebDriver()
+        {
+            _bindings.Dispose();
+
+            Assert.That(((TotallyFakeRemoteWebDriver)_bindings.Driver).Disposed, Is.EqualTo(true));
+        }
     }
 
     public class TotallyFakeRemoteWebDriver : OpenQA.Selenium.Remote.RemoteWebDriver 
@@ -96,6 +115,13 @@ namespace Ariane.Test.Unit.Drivers.RemoteWebDriver
             return new Response();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            Disposed = true;
+        }
+
+        public bool Disposed { get; set; }
+        public bool Closed { get; set; }
         public Dictionary<string, object> LastProvidedParameters { get; set; }
         public string LastExecutedCommand { get; set; }
     }
