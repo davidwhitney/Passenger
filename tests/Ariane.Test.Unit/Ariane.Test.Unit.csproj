@@ -64,6 +64,7 @@
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedExceptionTests.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandlerTests.cs" />
     <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistrationTests.cs" />
+    <Compile Include="Drivers\RemoteWebDriver\WebDriverBindingsTests.cs" />
     <Compile Include="ExampleUsage.cs" />
     <Compile Include="ReflectionExtensionsTests.cs" />
     <Compile Include="ModelInterception\PageObjectProxyGeneratorTests.cs" />
