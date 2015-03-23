@@ -1,5 +1,5 @@
 # Passenger - C# Page Object Models for your Selenium tests
-[![Build status](https://ci.appveyor.com/api/projects/status/kticwdj98vfp4roc/branch/master?svg=true)](https://ci.appveyor.com/project/DavidWhitney/Passenger/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/hbd96aw13hoxejud/branch/master?svg=true)](https://ci.appveyor.com/project/DavidWhitney/passenger/branch/master)
 
 Passenger is a C# page object model library to keep your Selenium code clean and dry.
 
