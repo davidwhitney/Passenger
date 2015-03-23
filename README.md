@@ -1,4 +1,5 @@
 # Ariane - C# Page Object Models for your Selenium tests
+[![Build status](https://ci.appveyor.com/api/projects/status/kticwdj98vfp4roc/branch/master?svg=true)](https://ci.appveyor.com/project/DavidWhitney/ariane/branch/master)
 
 Ariane is a C# page object model library to keep your Selenium code clean and dry.
 
