@@ -57,7 +57,7 @@
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedException.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />
-    <Compile Include="Drivers\RemoteWebDriver\ArianeConfigurationExtensionsForWebDriverRegistration.cs" />
+    <Compile Include="Drivers\RemoteWebDriver\PassengerConfigurationExtensionsForWebDriverRegistration.cs" />
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
