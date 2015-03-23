@@ -1,1 +1,1 @@
-.nuget\nuget pack "src\Ariane\Ariane.csproj" -OutputDirectory artifacts -Build -IncludeReferencedProjects -NonInteractive
+.nuget\nuget pack "src\Ariane\Ariane.csproj" -OutputDirectory artifacts -IncludeReferencedProjects -NonInteractive
