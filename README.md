@@ -15,6 +15,13 @@ Ideally, you'll replace any occurrences of `FindByXXX(someId)` with a strongly t
 * Attribute-based selection
 * Raw access to selenium drivers inside your Page objects
 
+## Installation
+
+Add Ariane to your test projects using NuGet
+
+		PM> Install-Package ariane
+
+
 ## Documentation
 
 * Example usage
