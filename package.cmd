@@ -1,1 +1,1 @@
-.nuget\nuget pack "src\Ariane\Ariane.csproj" -OutputDirectory artifacts -IncludeReferencedProjects -NonInteractive
+.nuget\nuget pack "src\Passenger\Passenger.csproj" -OutputDirectory artifacts -IncludeReferencedProjects -NonInteractive

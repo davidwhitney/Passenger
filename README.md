@@ -1,9 +1,9 @@
-# Ariane - C# Page Object Models for your Selenium tests
-[![Build status](https://ci.appveyor.com/api/projects/status/kticwdj98vfp4roc/branch/master?svg=true)](https://ci.appveyor.com/project/DavidWhitney/ariane/branch/master)
+# Passenger - C# Page Object Models for your Selenium tests
+[![Build status](https://ci.appveyor.com/api/projects/status/kticwdj98vfp4roc/branch/master?svg=true)](https://ci.appveyor.com/project/DavidWhitney/Passenger/branch/master)
 
-Ariane is a C# page object model library to keep your Selenium code clean and dry.
+Passenger is a C# page object model library to keep your Selenium code clean and dry.
 
-You can use Ariane to create lightweight page object models that describe the bindings between your tests and the Selenium selectors used for navigation.
+You can use Passenger to create lightweight page object models that describe the bindings between your tests and the Selenium selectors used for navigation.
 
 Ideally, you'll replace any occurrences of `FindByXXX(someId)` with a strongly typed model.
 
@@ -17,18 +17,18 @@ Ideally, you'll replace any occurrences of `FindByXXX(someId)` with a strongly t
 
 ## Installation
 
-Add Ariane to your test projects using NuGet
+Add Passenger to your test projects using NuGet
 
-		PM> Install-Package ariane
+		PM> Install-Package Passenger
 
 
 ## Documentation
 
 * Example usage
-* Why would I use Ariane?
+* Why would I use Passenger?
 * Why would I use this instead of a library like Coypu?
 * Writing your first test
-  * ArianeConfiguration
+  * PassengerConfiguration
   * The PageObjectTestContext
 * Creating your first Page Object
   * UrlAttribute
@@ -74,13 +74,13 @@ Consider the following C# test
 [TestFixture]
 public class ExampleUsage
 {
-  private ArianeConfiguration _testConfig;
+  private PassengerConfiguration _testConfig;
   private PageObjectTestContext<Homepage> _ctx;
 
   [SetUp]
   public void Setup()
   {
-    _testConfig = new ArianeConfiguration
+    _testConfig = new PassengerConfiguration
     {
       WebRoot = "http://www.davidwhitney.co.uk"
       }.WithDriver(new PhantomJSDriver());
@@ -112,7 +112,7 @@ public class ExampleUsage
   ```
 
 
-## Why would I use Ariane?
+## Why would I use Passenger?
 
 Simply, when your markup changes, your tests have to change, so it's important that you can change your tests in one place only.
 The benefits of the page object model are well documents elsewhere: http://martinfowler.com/bliki/PageObject.html
@@ -122,23 +122,23 @@ This is not a replacement for a BDD or Unit Testing framework, just a way to mak
 ## Why would I use this instead of a library like Coypu?
 
 There are a couple of good and well maintained "Selenium wrappers" out there that try and wrap, better and hide selenium from your tests.
-Ariane sees that approach, however valid, as a barrier to entry - and is to be used by teams that want to stay closer to "native selenium code".
+Passenger sees that approach, however valid, as a barrier to entry - and is to be used by teams that want to stay closer to "native selenium code".
 All the types that you're exposed to, with the exception of your page objects themselves, are native, unwrapped calls to WebDriver.
 
-Ariane is an addition to Seleniums existing APIs, not a replacement.
+Passenger is an addition to Seleniums existing APIs, not a replacement.
 
 If you use a wrapping library, we'd more than welcome you to provide an implementation of IDriverBindings for your driver wrapping library.
 
 ## Writing your first test
 
-* You need a SetUp creating an `ArianeConfiguration` object for your site.
+* You need a SetUp creating an `PassengerConfiguration` object for your site.
 * You need to add a `WebDriver` instance (like the PhantomJsDriver or FirefoxDriver) to the configuration.
-* You need to create a `ArianeTestContext` by calling
+* You need to create a `PassengerTestContext` by calling
 
 
     _testConfig.StartTestAt<TMyPageObjectType>()
 
-* You need to add a TearDown method that Disposes of the `ArianeTestContext`
+* You need to add a TearDown method that Disposes of the `PassengerTestContext`
 
 **Example**
 
@@ -147,13 +147,13 @@ If you use a wrapping library, we'd more than welcome you to provide an implemen
 [TestFixture]
 public class ExampleUsage
 {
-  private ArianeConfiguration _testConfig;
+  private PassengerConfiguration _testConfig;
   private PageObjectTestContext<Homepage> _ctx;
 
   [SetUp]
   public void Setup()
   {
-    _testConfig = new ArianeConfiguration
+    _testConfig = new PassengerConfiguration
     {
       WebRoot = "http://tempuri.org"
       }.WithDriver(new PhantomJSDriver());
@@ -205,15 +205,15 @@ There are a few important things here
 
 ### Creating an instance of your page object
 
-When you ask your ArianeConfiguration for an instance using
+When you ask your PassengerConfiguration for an instance using
 
-    ArianeTestContext.StartTestAt<MyPageObject>();
+    PassengerTestContext.StartTestAt<MyPageObject>();
 
 Selenium will go and fetch the page using the Url in the page object attribute, and the library will hand you an instance of your page object that you can start to interact with.
 
 ### The Uri attribute
 
-The Uri attribute supports either **fully qualified Urls** or **relative paths**. Relative paths are prefered, but when used, the ArianeConfiguration must have it's **WebRoot** property set. An exception will be thrown if you forget to do this.
+The Uri attribute supports either **fully qualified Urls** or **relative paths**. Relative paths are prefered, but when used, the PassengerConfiguration must have it's **WebRoot** property set. An exception will be thrown if you forget to do this.
 
 ### Collections
 
