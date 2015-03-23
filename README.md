@@ -205,7 +205,11 @@ There are a few important things here
 
 ### Creating an instance of your page object
 
-When you ask your ArianeConfiguration for an instance using `ArianeTestContext.StartTestAt<MyPageObject>();`, Selenium will go and fetch the page using the Url in the page object attribute, and the library will hand you an instance of your page object that you can start to interact with.
+When you ask your ArianeConfiguration for an instance using
+
+    ArianeTestContext.StartTestAt<MyPageObject>();
+
+Selenium will go and fetch the page using the Url in the page object attribute, and the library will hand you an instance of your page object that you can start to interact with.
 
 ### The Uri attribute
 
