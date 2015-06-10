@@ -6,6 +6,13 @@ namespace Passenger.ModelInterception
 {
     public static class PageObjectProxyGenerator
     {
+        public static PageObject Generate(IDriverBindings driver, Type pageObjectType)
+        {
+            var wrappedProxy = Generate(pageObjectType, driver);
+            var typePageObjectOfT = typeof(PageObject<>).MakeGenericType(pageObjectType);
+            return (PageObject)Activator.CreateInstance(typePageObjectOfT, driver, wrappedProxy);
+        }
+
         public static TPageObjectType Generate<TPageObjectType>(IDriverBindings driver) where TPageObjectType : class
         {
             return (TPageObjectType)Generate(typeof (TPageObjectType), driver);

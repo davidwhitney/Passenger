@@ -26,6 +26,7 @@ namespace Passenger.ModelInterception
             if (!invocation.Method.IsProperty())
             {
                 invocation.Proceed();
+                PostProcessReturnValue(invocation);
                 return;
             }
 
@@ -48,6 +49,19 @@ namespace Passenger.ModelInterception
             }.Route();
 
             Invoke(invocation, result);
+            PostProcessReturnValue(invocation);
+        }
+
+        private void PostProcessReturnValue(IInvocation invocation)
+        {
+            if (invocation.ReturnValue == null 
+                || !invocation.ReturnValue.GetType().Name.Contains("PageObject`1"))
+            {
+                return;
+            }
+
+            var genericParam = invocation.ReturnValue.GetType().GetGenericArguments().First();
+            invocation.ReturnValue = PageObjectProxyGenerator.Generate(_driver, genericParam);
         }
 
         private static void Invoke(IInvocation invocation, InvocationResult result)

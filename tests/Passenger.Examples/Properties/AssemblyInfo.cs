@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Passenger")]
-[assembly: AssemblyDescription("A PageObject Object Model library for Selenium WebDriver tests - keeping tests DRY")]
+[assembly: AssemblyTitle("Passenger.Examples")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Electric Head Software")]
-[assembly: AssemblyProduct("Passenger")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Passenger.Examples")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("16cd3d9c-12c4-433a-9dd9-2477597afd1e")]
+[assembly: Guid("61bd4077-d09f-422f-ab0a-1ec910a94d5a")]
 
 // Version information for an assembly consists of the following four values:
 //

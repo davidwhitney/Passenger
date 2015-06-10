@@ -6,14 +6,27 @@ using Passenger.ModelInterception;
 
 namespace Passenger
 {
-    public class PageObjectTestContext<TPageObjectType> : IDisposable where TPageObjectType : class
+    public class PageObject
     {
         public IDriverBindings Driver { get; set; }
         public string WebRoot { get; set; }
+        public object CurrentProxy { get; set; }
+    }
+    
+    public class PageObject<TPageObjectType> 
+        : PageObject, IDisposable where TPageObjectType : class
+    {
+        public PageObject()
+        {
+        }
 
-        private object _currentProxy;
+        public PageObject(IDriverBindings driver, TPageObjectType currentProxy)
+        {
+            Driver = driver;
+            CurrentProxy = currentProxy;
+        }
 
-        public PageObjectTestContext(IDriverBindings driver, string webRoot)
+        public PageObject(IDriverBindings driver, string webRoot)
         {
             Driver = driver;
             WebRoot = webRoot;
@@ -23,9 +36,9 @@ namespace Passenger
 
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
-            _currentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Driver.NavigateTo(UrlFor(_currentProxy));
-            return (TNextPageObjectType)_currentProxy;
+            CurrentProxy = CreateOrReturnProxy<TNextPageObjectType>();
+            Driver.NavigateTo(UrlFor(CurrentProxy));
+            return (TNextPageObjectType)CurrentProxy;
         }
 
         public TCurrentPageObjectType Page<TCurrentPageObjectType>() where TCurrentPageObjectType : class
@@ -45,12 +58,12 @@ namespace Passenger
 
         private TCurrentPageObjectType CreateOrReturnProxy<TCurrentPageObjectType>() where TCurrentPageObjectType : class
         {
-            if (_currentProxy == null || _currentProxy.GetType().BaseType != typeof (TCurrentPageObjectType))
+            if (CurrentProxy == null || CurrentProxy.GetType().BaseType != typeof (TCurrentPageObjectType))
             {
-                _currentProxy = PageObjectProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
+                CurrentProxy = PageObjectProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
             }
 
-            return (TCurrentPageObjectType) _currentProxy;
+            return (TCurrentPageObjectType) CurrentProxy;
         }
 
         private Uri UrlFor(object classProxy)
@@ -59,7 +72,7 @@ namespace Passenger
 
             if (attr == null)
             {
-                throw new Exception("Cannot navigate to a Page Object that doesn't have a [Uri(\"http://tempuri.org\")] attribute.");
+                throw new Exception("Cannot navigate to a PageObject Object that doesn't have a [Uri(\"http://tempuri.org\")] attribute.");
             }
 
             if (attr.Uri.IsAbsoluteUri)

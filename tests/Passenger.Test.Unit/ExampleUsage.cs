@@ -14,7 +14,7 @@ namespace Passenger.Test.Unit
     public class ExampleUsage
     {
         private PassengerConfiguration _testConfig;
-        private PageObjectTestContext<Homepage> _ctx;
+        private PageObject<Homepage> _pageObject;
         
         [SetUp]
         public void Setup()
@@ -28,21 +28,21 @@ namespace Passenger.Test.Unit
         [TearDown]
         public void Teardown()
         {
-            _ctx.Dispose();
+            _pageObject.Dispose();
         }
 
         [Test]
         public void ExampleUsageTest()
         {
-            _ctx = _testConfig.StartTestAt<Homepage>();
+            _pageObject = _testConfig.StartTestAt<Homepage>();
 
-            _ctx.Page<Homepage>().MiddleWrapper.Click();
-            _ctx.Page<Homepage>().FillInForm("abc");
+            _pageObject.Page<Homepage>().MiddleWrapper.Click();
+            _pageObject.Page<Homepage>().FillInForm("abc");
 
-            _ctx.Page<Homepage>().Blog.Click();
-            _ctx.VerifyRedirectionTo<Blog>();
+            _pageObject.Page<Homepage>().Blog.Click();
+            _pageObject.VerifyRedirectionTo<Blog>();
             
-            foreach (var post in _ctx.Page<Blog>().Posts)
+            foreach (var post in _pageObject.Page<Blog>().Posts)
             {
                 Console.WriteLine(post.Text);
             }

@@ -12,24 +12,25 @@ namespace Passenger.Test.Unit.ModelInterception
     public class PageObjectProxyTests
     {
         private InterceptedType _proxy;
+        private Mock<IDriverBindings> _fakeDriver;
 
         [SetUp]
         public void Setup()
         {
             // It's hard to hand construct a proxy - so we'll go via the proxy generator.
-            var fakeDriver = new Mock<IDriverBindings>();
-            fakeDriver.Setup(x => x.Substitutes).Returns(new List<DriverBindings.TypeSubstitution>
+            _fakeDriver = new Mock<IDriverBindings>();
+            _fakeDriver.Setup(x => x.Substitutes).Returns(new List<DriverBindings.TypeSubstitution>
             {
                 new DriverBindings.TypeSubstitution(typeof (InterceptedType.SubbedType),
                     () => new InterceptedType.SubbedType {Val = "Hi"})
             });
-            fakeDriver.Setup(x => x.NavigationHandlers).Returns(new List<DriverBindings.IHandle>
+            _fakeDriver.Setup(x => x.NavigationHandlers).Returns(new List<DriverBindings.IHandle>
             {
                 new DriverBindings.Handle<IdAttribute>((s, d) => "an id string"),
                 new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string")
             });
 
-            _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(fakeDriver.Object);
+            _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(_fakeDriver.Object);
         }
 
         [Test]
@@ -112,6 +113,22 @@ namespace Passenger.Test.Unit.ModelInterception
             Assert.That(selectorFromId, Is.EqualTo("a text string"));
         }
 
+        [Test]
+        public void Intercept_MethodThatTransitionsCalled_CorrectPageObjectReturned()
+        {
+            var newPageObject = _proxy.MethodThatTransitions();
+
+            Assert.That(newPageObject.Driver, Is.EqualTo(_fakeDriver.Object));
+        }
+
+        [Test]
+        public void Intercept_MethodThatTransitionsRawCalled_CorrectObjectReturned()
+        {
+            var newPageObject = _proxy.MethodThatTransitionsRaw();
+
+            Assert.That(newPageObject, Is.TypeOf<SomethingElse>());
+        }
+
         public class InterceptedType
         {
             [Id]
@@ -138,10 +155,24 @@ namespace Passenger.Test.Unit.ModelInterception
             public virtual MenuBar TotallyAPageComponent { get; set; }
             public virtual SubbedType ATypeThatIsRegisteredForSubstitution { get; set; }
 
+            public virtual PageObject<SomethingElse> MethodThatTransitions()
+            {
+                return Redirects.ToPageObject<SomethingElse>();
+            }
+
+            public virtual SomethingElse MethodThatTransitionsRaw()
+            {
+                return Redirects.To<SomethingElse>();
+            } 
+
             public class SubbedType
             {
                 public string Val { get; set; }
             }
+        }
+
+        public class SomethingElse
+        {
         }
 
         [PageComponent]

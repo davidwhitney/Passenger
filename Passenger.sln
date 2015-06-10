@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passenger", "src\Passenger\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passenger.Test.Unit", "tests\Passenger.Test.Unit\Passenger.Test.Unit.csproj", "{474D84EC-A629-4E79-82DE-23067FF5D309}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passenger.Examples", "tests\Passenger.Examples\Passenger.Examples.csproj", "{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{474D84EC-A629-4E79-82DE-23067FF5D309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474D84EC-A629-4E79-82DE-23067FF5D309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474D84EC-A629-4E79-82DE-23067FF5D309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,5 +43,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F411BD23-AADB-4B83-A0F8-20377ADDE8FD} = {6882AA0F-683A-4660-BF39-F9F00CC351DD}
 		{474D84EC-A629-4E79-82DE-23067FF5D309} = {F0C3B07C-A7E1-48AA-911B-35CE49323A36}
+		{6A4E93EF-C7BB-46FF-B81A-FF73DF0B224D} = {F0C3B07C-A7E1-48AA-911B-35CE49323A36}
 	EndGlobalSection
 EndGlobal
