@@ -62,6 +62,8 @@
     <Compile Include="Attributes\UriAttributeTests.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandlerTests.cs" />
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedExceptionTests.cs" />
+    <Compile Include="CommandHandlers\PropertySelectionFailureExceptionTests.cs" />
+    <Compile Include="CommandHandlers\TypeMappingTests.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandlerTests.cs" />
     <Compile Include="Drivers\RemoteWebDriver\PassengerConfigurationExtensionsForWebDriverRegistrationTests.cs" />
     <Compile Include="Drivers\RemoteWebDriver\WebDriverBindingsTests.cs" />

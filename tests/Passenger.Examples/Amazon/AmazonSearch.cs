@@ -69,7 +69,7 @@ namespace Passenger.Examples.Amazon
                     .SearchResultSomething();
             }
         }
-
+        
         [Uri("/")]
         public class Homepage
         {
@@ -78,7 +78,7 @@ namespace Passenger.Examples.Amazon
             [Id("twotabsearchtextbox")]
             public virtual IWebElement SearchBox { get; set; }
 
-            [CssSelector("nav-searchbar")]
+            [ClassName("nav-searchbar")]
             public virtual IWebElement SearchForm { get; set; }
 
             public virtual SearchResultsPage SearchFor(string thing)

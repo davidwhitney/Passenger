@@ -69,7 +69,7 @@ namespace Passenger.CommandHandlers
             var genericArgs = targetType.GetGenericArguments().FirstOrDefault();
             if (genericArgs == null)
             {
-                throw new Exception("Can't map to collection");
+                throw new NotSupportedException(string.Format("Cannot map to type '{0}' - try using List<T>, Type[] or other generic collection types.", targetType.Name));
             }
             return genericArgs;
         }
