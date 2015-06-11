@@ -56,6 +56,7 @@
     <Compile Include="Attributes\PageComponentAttribute.cs" />
     <Compile Include="Attributes\NavigationAttributes.cs" />
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedException.cs" />
+    <Compile Include="CommandHandlers\PropertySelectionFailureException.cs" />
     <Compile Include="CommandHandlers\TypeMapping.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />

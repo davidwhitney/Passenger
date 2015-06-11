@@ -11,6 +11,11 @@ namespace Passenger.CommandHandlers
     {
         public static object ReturnOrMap(object sourceElement, Type targetType)
         {
+            if (sourceElement == null)
+            {
+                return null;
+            }
+
             if (sourceElement.GetType().IsAWebElement()
                 && targetType.IsAPassengerElement())
             {

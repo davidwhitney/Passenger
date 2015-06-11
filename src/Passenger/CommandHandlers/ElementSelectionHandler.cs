@@ -31,7 +31,7 @@ namespace Passenger.CommandHandlers
             if (elements.GetType().IsCollection() 
                 && !property.PropertyType.IsCollection())
             {
-                elements = SelectFirstItemFrom(elements);
+                elements = SelectFirstItemFrom(elements, property);
             }
 
             return TypeMapping.ReturnOrMap(elements, property.PropertyType);
@@ -54,11 +54,19 @@ namespace Passenger.CommandHandlers
             return attributeHandler.FindAllMatches(key, _driver);
         }
 
-        private static object SelectFirstItemFrom(object elements)
+        private static object SelectFirstItemFrom(object elements, PropertyInfo property)
         {
-            var enumerator = ((IEnumerable) elements).GetEnumerator();
-            enumerator.MoveNext();
-            return enumerator.Current;
+            try
+            {
+                var asEnumerable = ((IEnumerable) elements);
+                var enumerator = asEnumerable.GetEnumerator();
+                enumerator.MoveNext();
+                return enumerator.Current;
+            }
+            catch (Exception ex)
+            {
+                throw new PropertySelectionFailureException(property, ex);
+            }
         }
     }
 }
