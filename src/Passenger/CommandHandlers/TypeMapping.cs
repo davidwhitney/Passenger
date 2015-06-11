@@ -29,19 +29,29 @@ namespace Passenger.CommandHandlers
         private static IEnumerable BuildCollectionOfWrappers(object sourceElement, Type targetType)
         {
             var elementType = GetElementType(targetType);
-            var wrapped = new List<IPassengerElement>();
+            var passengerItems = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+            
             foreach (var item in ((IEnumerable) sourceElement))
             {
-                var passengerElement = WrapIntoPassengerElement(item, elementType);
-                wrapped.Add(passengerElement);
+                passengerItems.Add(WrapIntoPassengerElement(item, elementType));
             }
 
-            var inst = (IList)Activator.CreateInstance(targetType);
-            foreach (var passengerElement in wrapped)
+            if (targetType.IsArray)
             {
-                inst.Add(passengerElement);
+                return TypedArray(elementType, passengerItems);
             }
-            return inst;
+
+            return (IEnumerable)Activator.CreateInstance(targetType, passengerItems);
+        }
+
+        private static IEnumerable TypedArray(Type elementType, IList passengerItems)
+        {
+            var array = Array.CreateInstance(elementType, passengerItems.Count);
+            for (var index = 0; index < passengerItems.Count; index++)
+            {
+                array.SetValue(passengerItems[index], index);
+            }
+            return array;
         }
 
         private static Type GetElementType(Type targetType)

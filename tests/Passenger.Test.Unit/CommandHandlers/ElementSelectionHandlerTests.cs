@@ -6,6 +6,7 @@ using Passenger.Drivers;
 using Moq;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.PhantomJS;
 
 namespace Passenger.Test.Unit.CommandHandlers
@@ -121,7 +122,7 @@ namespace Passenger.Test.Unit.CommandHandlers
             var domElements = new List<IWebElement>
             {
                 new PhantomJSWebElement(null, null),
-                new PhantomJSWebElement(null, null),
+                new FirefoxWebElement(null, null),
                 new PhantomJSWebElement(null, null),
             };
             
@@ -131,6 +132,31 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             Assert.That(selected, Is.InstanceOf<List<MyButton>>());
             Assert.That(((List<MyButton>)selected)[0].Inner, Is.EqualTo(domElements[0]));
+            Assert.That(((List<MyButton>)selected)[1].Inner, Is.EqualTo(domElements[1]));
+            Assert.That(((List<MyButton>)selected)[2].Inner, Is.EqualTo(domElements[2]));
+        }
+
+        [Test]
+        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndMultipleWebElementReturned_WrappedInstancesCreatedForArray()
+        {
+            var property = typeof(SelectionTestClass).GetProperty("ArrayOfButtons");
+            var id = property.GetCustomAttribute<IdAttribute>();
+            var domElements = new List<IWebElement>
+            {
+                new PhantomJSWebElement(null, null),
+                new FirefoxWebElement(null, null),
+                new PhantomJSWebElement(null, null),
+            };
+            
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElements));
+
+            var selected = _handler.SelectElement(id, property);
+
+            Assert.That(selected, Is.InstanceOf<MyButton[]>());
+            var buttonArray = (MyButton[]) selected;
+            Assert.That(buttonArray[0].Inner, Is.EqualTo(domElements[0]));
+            Assert.That(buttonArray[1].Inner, Is.EqualTo(domElements[1]));
+            Assert.That(buttonArray[2].Inner, Is.EqualTo(domElements[2]));
         }
 
         public class SelectionTestClass
@@ -149,6 +175,9 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             [Id]
             public virtual List<MyButton> Buttons { get; set; }
+
+            [Id]
+            public virtual MyButton[] ArrayOfButtons { get; set; }
         }
 
         public class MyButton : IPassengerElement

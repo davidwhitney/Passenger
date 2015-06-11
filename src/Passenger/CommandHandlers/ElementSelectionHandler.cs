@@ -23,7 +23,6 @@ namespace Passenger.CommandHandlers
             }
 
             var elements = ExecuteAttributeHandler(attr, property);
-            
             if (property.PropertyType == elements.GetType())
             {
                 return elements;
@@ -32,8 +31,7 @@ namespace Passenger.CommandHandlers
             if (elements.GetType().IsCollection() 
                 && !property.PropertyType.IsCollection())
             {
-                // TODO: Wrap first element here
-                return SelectFirstItemFrom(elements);
+                elements = SelectFirstItemFrom(elements);
             }
 
             return TypeMapping.ReturnOrMap(elements, property.PropertyType);
