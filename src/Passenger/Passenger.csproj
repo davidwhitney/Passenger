@@ -51,7 +51,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\IPageChain.cs" />
     <Compile Include="Attributes\NavigationAttributeBase.cs" />
     <Compile Include="Attributes\PageComponentAttribute.cs" />
     <Compile Include="Attributes\NavigationAttributes.cs" />

@@ -73,10 +73,9 @@ namespace ClassLibrary1
         }
 
         [Uri("/")]
-        public class Homepage : IEnableChaining
+        public class Homepage
         {
             public virtual RemoteWebDriver Driver { get; set; }
-            public virtual TType ArriveAt<TType>() { return default(TType); }
 
             [Id("twotabsearchtextbox")]
             public virtual IWebElement SearchBox { get; set; }
@@ -88,7 +87,7 @@ namespace ClassLibrary1
             {
                 SearchBox.Click();
                 Driver.Keyboard.SendKeys(thing);
-                //SearchForm.Submit();
+                SearchForm.Submit();
 
                 return Arrives.At<SearchResultsPage>();
             }

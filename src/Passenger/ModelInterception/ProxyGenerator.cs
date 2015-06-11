@@ -1,6 +1,5 @@
 ﻿using System;
 using Passenger.Drivers;
-using Castle.DynamicProxy;
 
 namespace Passenger.ModelInterception
 {
