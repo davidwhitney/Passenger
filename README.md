@@ -34,11 +34,13 @@ Add Passenger to your test projects using NuGet
   * The UrlAttribute
 	* Collections
   * Navigation attributes and selectors
-	* Other methods
-	* Page transitions and method chaining
 	* Accessing WebDriver from a page object
+	* Methods
 * Creating your first Page Component
   * PageComponentAttribute
+* Extended features
+	* Page transitions and method chaining
+	* Building UI abstractions with IPassengerElements
 
 ## Example usage
 
@@ -252,7 +254,26 @@ public class MyPageObject
 }
 ```
 
-## Other methods
+## Accessing the WebDriver from a page object
+
+You can access the native WebDriver from inside your page objects by providing a public/protected virtual property of the type `IWebDriver` or `RemoteWebDriver`.
+
+```csharp
+[Uri("http://tempuri.org")]
+public class MyPageObject
+{  
+  protected virtual IWebDriver CurrentDriver { get; set; }
+
+  public void FillInMyForm()
+  {
+    CurrentDriver.SelectBy....
+  }
+}
+```
+
+The driver that gets returned when you access that property will be the current driver from the test context you are currently executing it - basically - it'll "just work".
+
+## Methods
 
 Apart from these "magical" properties, your Page objects behave like normal objects, so you can and should write methods to perform your page interactions in the objects themselves
 
@@ -271,6 +292,37 @@ public class MyPageObject
   }
 }
 ```
+
+Remember - the idea is to encapsulate any page operations inside the object - and leave your tests or BDD scenarios only orchestrating calls to the page object.
+
+
+## Creating your first Page Component
+
+Page components represent re-usable portions of your Page object model, like a consistent navigation menu. They work in exactly the same way, with exactly the same features, as the "root" page object.
+
+To create a page component, just create a POCO with the `PageComponentAttribute` on the class. The library will correctly hook up your page components for you, and you can use them like this:
+
+```csharp
+[Uri("http://tempuri.org")]
+public class MyPageObject
+{  
+  public virtual MyNav Navigation { get; set; }
+
+  public void GoHome()
+  {
+    Navigation.HomeLink.Click();
+  }
+}
+
+[PageComponent]
+public class MyNav
+{  
+  [Id("homeLink")]
+  public virtual IWebElement HomeLink { get; set; }
+}
+```
+
+# Extended features
 
 ## Page transitions and method chaining
 
@@ -322,49 +374,27 @@ using (var context = testConfig.StartTestAt<Homepage>())
 
 If you need access to the initial `PageObject<TYourPageObject>` you can use the method `Arrives.AtPageObject<TYourPageObject>` as your method return.
 
-Remember - the idea is to encapsulate any page operations inside the object - and leave your tests or BDD scenarios only orchestrating calls to the page object.
+## Building UI abstractions with IPassengerElements
 
-## Accessing the WebDriver from a page object
+In addition to your Page Objects and Page Components you may find you need to test web applications with small repeating UI elements that you need to write some WebDriver code to maniuplate - it could be something as small as a button, or as complex as a specific type of menu or javascript driven control. We have provided a hook - the `IPassengerElement` - to help you capture these interactions.
 
-You can access the native WebDriver from inside your page objects by providing a public/protected virtual property of the type `IWebDriver` or `RemoteWebDriver`.
-
-```csharp
-[Uri("http://tempuri.org")]
-public class MyPageObject
-{  
-  protected virtual IWebDriver CurrentDriver { get; set; }
-
-  public void FillInMyForm()
-  {
-    CurrentDriver.SelectBy....
-  }
-}
-```
-
-The driver that gets returned when you access that property will be the current driver from the test context you are currently executing it - basically - it'll "just work".
-
-## Creating your first Page Component
-
-Page components represent re-usable portions of your Page object model, like a consistent navigation menu. They work in exactly the same way, with exactly the same features, as the "root" page object.
-
-To create a page component, just create a POCO with the `PageComponentAttribute` on the class. The library will correctly hook up your page components for you, and you can use them like this:
+`IPassengerElement` is a simple interface you can implement that you can use in place of a standard Selenium IWebElement. Consider the following example:
 
 ```csharp
-[Uri("http://tempuri.org")]
 public class MyPageObject
-{  
-  public virtual MyNav Navigation { get; set; }
+{
+		[Id]
+		public virtual MyButton Button { get; set; }
 
-  public void GoHome()
-  {
-    Navigation.HomeLink.Click();
-  }
+		[CssSelector]
+		public virtual List<MyButton> Buttons { get; set; }
 }
 
-[PageComponent]
-public class MyNav
-{  
-  [Id("homeLink")]
-  public virtual IWebElement HomeLink { get; set; }
+public class MyButton : IPassengerElement
+{
+		public IWebElement Inner { get; set; }
 }
 ```
+The `IPassengerElement` interface forces you to implement a single public property which can be get/set by the library. If you implement this interface, you can use the implementing class anywhere a normal `IWebElement` would work - the `Inner` property will be set with the underlying `IWebElement` from the selenium selection.
+
+You can use `IPassengerElement`s with collections, or on their own, to build richer DSLs using Passenger.
