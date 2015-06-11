@@ -10,7 +10,7 @@ namespace Passenger.CommandHandlers
         public PropertySelectionFailureException(PropertyInfo info, Exception ex)
             :base("Attempting to match property '" + info + "' failed. " +
                   "Make sure your selector is correct. " +
-                  "Collection returned fro WebDriver was empty.", ex)
+                  "Collection returned from WebDriver was empty.", ex)
         {
             Info = info;
         }
