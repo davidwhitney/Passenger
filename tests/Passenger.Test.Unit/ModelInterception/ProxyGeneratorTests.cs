@@ -5,11 +5,12 @@ using Passenger.ModelInterception;
 using Castle.DynamicProxy;
 using Moq;
 using NUnit.Framework;
+using ProxyGenerator = Passenger.ModelInterception.ProxyGenerator;
 
 namespace Passenger.Test.Unit.ModelInterception
 {
     [TestFixture]
-    public class PageObjectProxyGeneratorTests
+    public class ProxyGeneratorTests
     {
         private IDriverBindings _fakeDriver;
 
@@ -22,7 +23,7 @@ namespace Passenger.Test.Unit.ModelInterception
         [Test]
         public void Generate_GivenTypeAndDriver_GeneratesProxyThatPassesTypeCheck()
         {
-            var proxy = PageObjectProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
+            var proxy = ProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
 
             Assert.That(proxy, Is.InstanceOf<PopgTestObject>());
         }
@@ -30,7 +31,7 @@ namespace Passenger.Test.Unit.ModelInterception
         [Test]
         public void Generate_PassedNullDriverBindings_Throws()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => PageObjectProxyGenerator.Generate<PopgTestObject>(null));
+            var ex = Assert.Throws<ArgumentNullException>(() => ProxyGenerator.Generate<PopgTestObject>(null));
 
             Assert.That(ex.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: driver"));
         }
@@ -38,7 +39,7 @@ namespace Passenger.Test.Unit.ModelInterception
         [Test]
         public void Generate_GivenTypeAndDriver_InheritsFromPom()
         {
-            var proxy = PageObjectProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
+            var proxy = ProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
 
             Assert.That(proxy.GetType().BaseType, Is.EqualTo(typeof(PopgTestObject)));
         }
@@ -46,7 +47,7 @@ namespace Passenger.Test.Unit.ModelInterception
         [Test]
         public void Generate_GivenTypeAndDriver_ReturnsInterceptedType()
         {
-            var proxy = PageObjectProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
+            var proxy = ProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
 
             var interceptor = ((IInterceptor[])proxy.GetType().GetFields().Single(x => x.Name == "__interceptors").GetValue(proxy)).Single();
 

@@ -4,13 +4,18 @@ using Castle.DynamicProxy;
 
 namespace Passenger.ModelInterception
 {
-    public static class PageObjectProxyGenerator
+    public static class ProxyGenerator
     {
-        public static PageObject Generate(IDriverBindings driver, Type pageObjectType)
+        public static PageObject GenerateWrappedPageObject(Type pageObjectType, IDriverBindings driver)
         {
             var wrappedProxy = Generate(pageObjectType, driver);
             var typePageObjectOfT = typeof(PageObject<>).MakeGenericType(pageObjectType);
             return (PageObject)Activator.CreateInstance(typePageObjectOfT, driver, wrappedProxy);
+        }
+
+        public static T GenerateNavigationProxy<T>()
+        {
+            return (T)new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(typeof (T), new NavigationProxy());
         }
 
         public static TPageObjectType Generate<TPageObjectType>(IDriverBindings driver) where TPageObjectType : class
@@ -25,16 +30,7 @@ namespace Passenger.ModelInterception
                 throw new ArgumentNullException("driver");
             }
 
-            var generator = new ProxyGenerator();
-            var pageObjectProxy = new PageObjectProxy(driver);
-            return generator.CreateClassProxy(propertyType, pageObjectProxy);
-        }
-
-        public static T GenerateNavigationProxy<T>()
-        {
-            var generator = new ProxyGenerator();
-            var pageObjectProxy = new NavigationProxy();
-            return (T)generator.CreateClassProxy(typeof(T), pageObjectProxy);
+            return new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(propertyType, new PageObjectProxy(driver));
         }
     }
 }

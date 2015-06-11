@@ -39,5 +39,20 @@ namespace Passenger
 
             return property.GetInterfaces().Any(x => x.Name.ToLower().Contains("enumerable"));
         }
+
+        public static bool IsAProxy(this object obj)
+        {
+            return obj.GetType().FullName.StartsWith("Castle.Proxies");
+        }
+
+        public static bool IsAPageObject(this Type type)
+        {
+            return type.Name.Contains("PageObject`1");
+        }
+
+        public static Type GetGenericParam(this Type type)
+        {
+            return type.GetGenericArguments().First();
+        }
     }
 }

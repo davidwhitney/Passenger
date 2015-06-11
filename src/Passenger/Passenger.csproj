@@ -63,9 +63,9 @@
     <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
     <Compile Include="ModelInterception\NavigationProxy.cs" />
-    <Compile Include="Redirects.cs" />
+    <Compile Include="Arrives.cs" />
     <Compile Include="ReflectionExtensions.cs" />
-    <Compile Include="ModelInterception\PageObjectProxyGenerator.cs" />
+    <Compile Include="ModelInterception\ProxyGenerator.cs" />
     <Compile Include="PassengerConfiguration.cs" />
     <Compile Include="ModelInterception\PageObjectProxy.cs" />
     <Compile Include="PageObject.cs" />

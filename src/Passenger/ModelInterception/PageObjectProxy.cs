@@ -55,22 +55,15 @@ namespace Passenger.ModelInterception
 
         private void PostProcessReturnValue(IInvocation invocation)
         {
-            if (invocation.ReturnValue == null)
+            if (invocation.ReturnValue == null
+                || !invocation.ReturnValue.IsAProxy())
             {
                 return;
             }
 
-            if (invocation.ReturnValue.GetType().Name.Contains("PageObject`1"))
-            {
-                var genericParam = invocation.ReturnValue.GetType().GetGenericArguments().First();
-                invocation.ReturnValue = PageObjectProxyGenerator.Generate(_driver, genericParam);
-                return;
-            }
-
-            if (invocation.ReturnValue.GetType().FullName.StartsWith("Castle.Proxies"))
-            {
-                invocation.ReturnValue = PageObjectProxyGenerator.Generate(invocation.Method.ReturnType, _driver);
-            }
+            invocation.ReturnValue = invocation.Method.ReturnType.IsAPageObject()
+                ? ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _driver)
+                : ProxyGenerator.Generate(invocation.Method.ReturnType, _driver);
         }
 
         private static void Invoke(IInvocation invocation, InvocationResult result)
@@ -86,9 +79,9 @@ namespace Passenger.ModelInterception
 
         private object GenerateComponentProxy(PropertyInfo property)
         {
-            return PageObjectProxyGenerator.Generate(property.PropertyType, _driver);
+            return ProxyGenerator.Generate(property.PropertyType, _driver);
         }
-
+        
         private class InvocationSwitchboard : Dictionary<Func<bool>, Func<InvocationResult>>
         {
             public InvocationResult Route()

@@ -60,7 +60,7 @@ namespace Passenger
         {
             if (CurrentProxy == null || CurrentProxy.GetType().BaseType != typeof (TCurrentPageObjectType))
             {
-                CurrentProxy = PageObjectProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
+                CurrentProxy = ProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
             }
 
             return (TCurrentPageObjectType) CurrentProxy;

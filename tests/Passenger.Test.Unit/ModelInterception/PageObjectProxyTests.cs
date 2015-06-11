@@ -30,7 +30,7 @@ namespace Passenger.Test.Unit.ModelInterception
                 new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string")
             });
 
-            _proxy = PageObjectProxyGenerator.Generate<InterceptedType>(_fakeDriver.Object);
+            _proxy = ProxyGenerator.Generate<InterceptedType>(_fakeDriver.Object);
         }
 
         [Test]
@@ -157,12 +157,12 @@ namespace Passenger.Test.Unit.ModelInterception
 
             public virtual PageObject<SomethingElse> MethodThatTransitions()
             {
-                return Redirects.ToPageObject<SomethingElse>();
+                return Arrives.AtPageObject<SomethingElse>();
             }
 
             public virtual SomethingElse MethodThatTransitionsRaw()
             {
-                return Redirects.To<SomethingElse>();
+                return Arrives.At<SomethingElse>();
             } 
 
             public class SubbedType

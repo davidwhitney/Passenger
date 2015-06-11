@@ -67,7 +67,7 @@
     <Compile Include="Drivers\RemoteWebDriver\WebDriverBindingsTests.cs" />
     <Compile Include="ExampleUsage.cs" />
     <Compile Include="ReflectionExtensionsTests.cs" />
-    <Compile Include="ModelInterception\PageObjectProxyGeneratorTests.cs" />
+    <Compile Include="ModelInterception\ProxyGeneratorTests.cs" />
     <Compile Include="ModelInterception\PageObjectProxyTests.cs" />
     <Compile Include="ModelInterception\TotallyFakeWebDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

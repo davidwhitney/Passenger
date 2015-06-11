@@ -68,7 +68,6 @@ namespace ClassLibrary1
                 context
                     .Page<Homepage>()
                     .SearchFor("Game of thrones")
-                    .Page<SearchResultsPage>()
                     .SearchResultSomething();
             }
         }
@@ -85,13 +84,13 @@ namespace ClassLibrary1
             [CssSelector("nav-searchbar")]
             public virtual IWebElement SearchForm { get; set; }
 
-            public virtual PageObject<SearchResultsPage> SearchFor(string thing)
+            public virtual SearchResultsPage SearchFor(string thing)
             {
                 SearchBox.Click();
                 Driver.Keyboard.SendKeys(thing);
                 //SearchForm.Submit();
 
-                return Redirects.ToPageObject<SearchResultsPage>();
+                return Arrives.At<SearchResultsPage>();
             }
         }
 
@@ -105,7 +104,7 @@ namespace ClassLibrary1
 
             public Homepage SearchResultSomething()
             {
-                return Redirects.To<Homepage>();
+                return Arrives.At<Homepage>();
             }
         }
 
