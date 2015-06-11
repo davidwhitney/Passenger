@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using OpenQA.Selenium;
 using Passenger.Attributes;
 
 namespace Passenger
@@ -53,6 +54,21 @@ namespace Passenger
         public static Type GetGenericParam(this Type type)
         {
             return type.GetGenericArguments().First();
+        }
+
+        public static bool IsAWebElement(this Type type)
+        {
+            return type.GetInterfaces().Contains(typeof (IWebElement));
+        }
+
+        public static bool IsAPassengerElement(this Type type)
+        {
+            return type.GetInterfaces().Contains(typeof (IPassengerElement));
+        }
+
+        public static bool Implements(this Type type, Type interfaceType)
+        {
+            return type.GetInterfaces().Contains(interfaceType);
         }
     }
 }

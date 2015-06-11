@@ -51,10 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\IPassengerElement.cs" />
     <Compile Include="Attributes\NavigationAttributeBase.cs" />
     <Compile Include="Attributes\PageComponentAttribute.cs" />
     <Compile Include="Attributes\NavigationAttributes.cs" />
     <Compile Include="CommandHandlers\NavigationTypeNotSupportedException.cs" />
+    <Compile Include="CommandHandlers\TypeMapping.cs" />
     <Compile Include="CommandHandlers\TypeSubstitutionHandler.cs" />
     <Compile Include="Drivers\IDriverBindings.cs" />
     <Compile Include="Drivers\RemoteWebDriver\PassengerConfigurationExtensionsForWebDriverRegistration.cs" />

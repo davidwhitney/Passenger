@@ -6,6 +6,7 @@ using Passenger.Drivers;
 using Moq;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.PhantomJS;
 
 namespace Passenger.Test.Unit.CommandHandlers
 {
@@ -97,6 +98,41 @@ namespace Passenger.Test.Unit.CommandHandlers
             Assert.That(selected, Is.EqualTo(_collection[0]));
         }
 
+        [Test]
+        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndWebElementReturned_WrappedInstanceCreated()
+        {
+            var property = typeof(SelectionTestClass).GetProperty("Button");
+            var id = property.GetCustomAttribute<IdAttribute>();
+            var domElement = new PhantomJSWebElement(null, null);
+            
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElement));
+
+            var selected = _handler.SelectElement(id, property);
+
+            Assert.That(selected, Is.InstanceOf<MyButton>());
+            Assert.That(((MyButton)selected).Inner, Is.EqualTo(domElement));
+        }
+
+        [Test]
+        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndMultipleWebElementReturned_WrappedInstancesCreated()
+        {
+            var property = typeof(SelectionTestClass).GetProperty("Buttons");
+            var id = property.GetCustomAttribute<IdAttribute>();
+            var domElements = new List<IWebElement>
+            {
+                new PhantomJSWebElement(null, null),
+                new PhantomJSWebElement(null, null),
+                new PhantomJSWebElement(null, null),
+            };
+            
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElements));
+
+            var selected = _handler.SelectElement(id, property);
+
+            Assert.That(selected, Is.InstanceOf<List<MyButton>>());
+            Assert.That(((List<MyButton>)selected)[0].Inner, Is.EqualTo(domElements[0]));
+        }
+
         public class SelectionTestClass
         {
             [Id]
@@ -107,6 +143,17 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             [Id]
             public virtual string String { get; set; } 
+
+            [Id]
+            public virtual MyButton Button { get; set; }
+
+            [Id]
+            public virtual List<MyButton> Buttons { get; set; }
+        }
+
+        public class MyButton : IPassengerElement
+        {
+            public IWebElement Inner { get; set; }
         }
     }
 }
