@@ -31,8 +31,12 @@ Add Passenger to your test projects using NuGet
   * PassengerConfiguration
   * The PageObjectTestContext
 * Creating your first Page Object
-  * UrlAttribute
-  * Navigation attributes
+  * The UrlAttribute
+	* Collections
+  * Navigation attributes and selectors
+	* Other methods
+	* Page transitions and method chaining
+	* Accessing WebDriver from a page object
 * Creating your first Page Component
   * PageComponentAttribute
 
@@ -133,11 +137,7 @@ If you use a wrapping library, we'd more than welcome you to provide an implemen
 
 * You need a SetUp creating an `PassengerConfiguration` object for your site.
 * You need to add a `WebDriver` instance (like the PhantomJsDriver or FirefoxDriver) to the configuration.
-* You need to create a `PassengerTestContext` by calling
-
-
-    _testConfig.StartTestAt<TMyPageObjectType>()
-
+* You need to create a `PassengerTestContext` by calling ```_testConfig.StartTestAt<TMyPageObjectType>()```
 * You need to add a TearDown method that Disposes of the `PassengerTestContext`
 
 **Example**
@@ -168,7 +168,6 @@ public class ExampleUsage
     }
   }
 ```
-
 
 
 &nbsp;
@@ -203,7 +202,7 @@ There are a few important things here
   1. The page element **must be declared as a public/protected virtual** property.
   2. The `Type` of the property must match the `Type` Selenium would return when `FindByXXX`-ing.
 
-### Creating an instance of your page object
+## Creating an instance of your page object
 
 When you ask your PassengerConfiguration for an instance using
 
@@ -211,11 +210,11 @@ When you ask your PassengerConfiguration for an instance using
 
 Selenium will go and fetch the page using the Url in the page object attribute, and the library will hand you an instance of your page object that you can start to interact with.
 
-### The Uri attribute
+## The Uri attribute
 
 The Uri attribute supports either **fully qualified Urls** or **relative paths**. Relative paths are prefered, but when used, the PassengerConfiguration must have it's **WebRoot** property set. An exception will be thrown if you forget to do this.
 
-### Collections
+## Collections
 
 Collections of elements are supported for selectors that return multiple items:
 
@@ -228,7 +227,7 @@ public class MyPageObject
 }
 ```
 
-### Navigation attributes and selectors
+## Navigation attributes and selectors
 
 We support all the navigation attributes available in selenium:
 
@@ -241,7 +240,7 @@ We support all the navigation attributes available in selenium:
 * LinkTextAttribute
 * PartialLinkTextAttribute
 
-By default, these attributes use the **case sensitive property name* as their selection criteria - but you can override this by providing the selector as parameters. For example:
+By default, these attributes use the **case sensitive property name** as their selection criteria - but you can override this by providing the selector as parameters. For example:
 
 
 ```csharp
@@ -253,7 +252,7 @@ public class MyPageObject
 }
 ```
 
-### Other methods
+## Other methods
 
 Apart from these "magical" properties, your Page objects behave like normal objects, so you can and should write methods to perform your page interactions in the objects themselves
 
@@ -273,9 +272,59 @@ public class MyPageObject
 }
 ```
 
+## Page transitions and method chaining
+
+Page objects support `Page transitions` - it's common for a method on a page object to drive the browser to another Uri - page transitions are a way of capturing this behaviour in your model.
+
+To implement a method that leads to another page - you must:
+* Mark the method as `virtual`
+* Set the return type of the method to be the page object you're transitioning to
+* Use the helper method `Arrives.At<TDestinationPageObject>()` as your return statement.
+
+This will create the subsequent page object for you, imbued with Passenger magic.
+
+Given this page object for searching:
+
+```csharp
+[Uri("/")]
+public class Homepage
+{
+    public virtual RemoteWebDriver Driver { get; set; }
+
+    [Id("twotabsearchtextbox")]
+    public virtual IWebElement SearchBox { get; set; }
+
+    [CssSelector("nav-searchbar")]
+    public virtual IWebElement SearchForm { get; set; }
+
+    public virtual SearchResultsPage SearchFor(string thing)
+    {
+        SearchBox.Click();
+        Driver.Keyboard.SendKeys(thing);
+        SearchForm.Submit();
+
+        return Arrives.At<SearchResultsPage>();
+    }
+}
+```
+
+You can now use method chaining to write tests that look like this:
+
+```csharp
+using (var context = testConfig.StartTestAt<Homepage>())
+{
+    context
+        .Page<Homepage>()
+        .SearchFor("Game of thrones")
+        .SomeMethodOnSearchResultsPage();
+}
+```
+
+If you need access to the initial `PageObject<TYourPageObject>` you can use the method `Arrives.AtPageObject<TYourPageObject>` as your method return.
+
 Remember - the idea is to encapsulate any page operations inside the object - and leave your tests or BDD scenarios only orchestrating calls to the page object.
 
-### Accessing the WebDriver from a page object
+## Accessing the WebDriver from a page object
 
 You can access the native WebDriver from inside your page objects by providing a public/protected virtual property of the type `IWebDriver` or `RemoteWebDriver`.
 
