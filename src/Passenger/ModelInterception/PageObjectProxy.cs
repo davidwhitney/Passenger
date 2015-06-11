@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Passenger.CommandHandlers;
@@ -54,14 +55,22 @@ namespace Passenger.ModelInterception
 
         private void PostProcessReturnValue(IInvocation invocation)
         {
-            if (invocation.ReturnValue == null 
-                || !invocation.ReturnValue.GetType().Name.Contains("PageObject`1"))
+            if (invocation.ReturnValue == null)
             {
                 return;
             }
 
-            var genericParam = invocation.ReturnValue.GetType().GetGenericArguments().First();
-            invocation.ReturnValue = PageObjectProxyGenerator.Generate(_driver, genericParam);
+            if (invocation.ReturnValue.GetType().Name.Contains("PageObject`1"))
+            {
+                var genericParam = invocation.ReturnValue.GetType().GetGenericArguments().First();
+                invocation.ReturnValue = PageObjectProxyGenerator.Generate(_driver, genericParam);
+                return;
+            }
+
+            if (invocation.ReturnValue.GetType().FullName.StartsWith("Castle.Proxies"))
+            {
+                invocation.ReturnValue = PageObjectProxyGenerator.Generate(invocation.Method.ReturnType, _driver);
+            }
         }
 
         private static void Invoke(IInvocation invocation, InvocationResult result)

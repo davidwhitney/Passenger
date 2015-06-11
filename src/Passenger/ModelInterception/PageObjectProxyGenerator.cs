@@ -29,5 +29,12 @@ namespace Passenger.ModelInterception
             var pageObjectProxy = new PageObjectProxy(driver);
             return generator.CreateClassProxy(propertyType, pageObjectProxy);
         }
+
+        public static T GenerateNavigationProxy<T>()
+        {
+            var generator = new ProxyGenerator();
+            var pageObjectProxy = new NavigationProxy();
+            return (T)generator.CreateClassProxy(typeof(T), pageObjectProxy);
+        }
     }
 }

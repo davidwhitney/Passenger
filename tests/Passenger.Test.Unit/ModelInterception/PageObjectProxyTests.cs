@@ -122,11 +122,11 @@ namespace Passenger.Test.Unit.ModelInterception
         }
 
         [Test]
-        public void Intercept_MethodThatTransitionsRawCalled_CorrectObjectReturned()
+        public void Intercept_MethodThatTransitionsRawCalled_ReturnsProxiedObjectForChaining()
         {
             var newPageObject = _proxy.MethodThatTransitionsRaw();
 
-            Assert.That(newPageObject, Is.TypeOf<SomethingElse>());
+            Assert.That(newPageObject.GetType().Name, Is.EqualTo("SomethingElseProxy"));
         }
 
         public class InterceptedType
@@ -173,6 +173,12 @@ namespace Passenger.Test.Unit.ModelInterception
 
         public class SomethingElse
         {
+            public string Id { get; set; }
+
+            public virtual string Method()
+            {
+                return "abc";
+            }
         }
 
         [PageComponent]

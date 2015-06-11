@@ -1,11 +1,13 @@
-﻿namespace Passenger
+﻿using Passenger.ModelInterception;
+
+namespace Passenger
 {
     public class Redirects
     {
         public static TPageObjectType To<TPageObjectType>()
             where TPageObjectType : class, new()
         {
-            return new TPageObjectType();
+            return PageObjectProxyGenerator.GenerateNavigationProxy<TPageObjectType>();
         }
 
         public static PageObject<TPageObjectType> ToPageObject<TPageObjectType>()
