@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Remote;
-using Passenger;
 using Passenger.Attributes;
 using Passenger.Drivers.RemoteWebDriver;
 
-namespace ClassLibrary1
+namespace Passenger.Examples.Amazon
 {
+    [Ignore]
     [TestFixture]
     public class AmazonExample
     {
