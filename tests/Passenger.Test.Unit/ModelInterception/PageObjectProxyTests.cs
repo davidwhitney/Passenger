@@ -30,7 +30,8 @@ namespace Passenger.Test.Unit.ModelInterception
                 new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string")
             });
 
-            _proxy = ProxyGenerator.Generate<InterceptedType>(_fakeDriver.Object);
+            var cfg = new PassengerConfiguration { Driver = _fakeDriver.Object };
+            _proxy = ProxyGenerator.Generate<InterceptedType>(cfg);
         }
 
         [Test]
@@ -118,7 +119,7 @@ namespace Passenger.Test.Unit.ModelInterception
         {
             var newPageObject = _proxy.MethodThatTransitions();
 
-            Assert.That(newPageObject.Driver, Is.EqualTo(_fakeDriver.Object));
+            Assert.That(newPageObject.Configuration.Driver, Is.EqualTo(_fakeDriver.Object));
         }
 
         [Test]

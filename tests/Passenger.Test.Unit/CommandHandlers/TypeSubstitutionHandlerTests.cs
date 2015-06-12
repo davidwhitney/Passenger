@@ -15,7 +15,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         public void Setup()
         {
             _fakeDriver = new TotallyFakeWebDriver();
-            _handler = new TypeSubstitutionHandler(_fakeDriver);
+            _handler = new TypeSubstitutionHandler(new PassengerConfiguration { Driver = _fakeDriver });
         }
 
         [Test]

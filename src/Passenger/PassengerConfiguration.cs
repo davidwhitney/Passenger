@@ -5,7 +5,7 @@ namespace Passenger
 {
     public class PassengerConfiguration
     {
-        public DriverBindings Driver { get; set; }
+        public IDriverBindings Driver { get; set; }
         public string WebRoot { get; set; }
 
         public PageObject<TPageObjectType> StartTestAt<TPageObjectType>() where TPageObjectType : class
@@ -15,7 +15,7 @@ namespace Passenger
                 throw new ArgumentException("Must configure a driver.");
             }
 
-            return new PageObject<TPageObjectType>(Driver, WebRoot);
+            return new PageObject<TPageObjectType>(this);
         }
     }
 }

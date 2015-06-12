@@ -10,9 +10,9 @@ namespace Passenger.CommandHandlers
     {
         private readonly IDriverBindings _driver;
 
-        public ElementSelectionHandler(IDriverBindings driver)
+        public ElementSelectionHandler(PassengerConfiguration configuration)
         {
-            _driver = driver;
+            _driver = configuration.Driver;
         }
 
         public object SelectElement(Attribute attr, PropertyInfo property)

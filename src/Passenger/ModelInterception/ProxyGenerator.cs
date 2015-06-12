@@ -5,11 +5,16 @@ namespace Passenger.ModelInterception
 {
     public static class ProxyGenerator
     {
-        public static PageObject GenerateWrappedPageObject(Type pageObjectType, IDriverBindings driver)
+        public static PageObject GenerateWrappedPageObject(Type pageObjectType, PassengerConfiguration driver)
         {
             var wrappedProxy = Generate(pageObjectType, driver);
             var typePageObjectOfT = typeof(PageObject<>).MakeGenericType(pageObjectType);
             return (PageObject)Activator.CreateInstance(typePageObjectOfT, driver, wrappedProxy);
+        }
+
+        public static TPageObjectType Generate<TPageObjectType>(PassengerConfiguration driver) where TPageObjectType : class
+        {
+            return (TPageObjectType)Generate(typeof (TPageObjectType), driver);
         }
 
         public static T GenerateNavigationProxy<T>()
@@ -17,12 +22,7 @@ namespace Passenger.ModelInterception
             return (T)new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(typeof (T), new NavigationProxy());
         }
 
-        public static TPageObjectType Generate<TPageObjectType>(IDriverBindings driver) where TPageObjectType : class
-        {
-            return (TPageObjectType)Generate(typeof (TPageObjectType), driver);
-        }
-
-        public static object Generate(Type propertyType, IDriverBindings driver)
+        public static object Generate(Type propertyType, PassengerConfiguration driver)
         {
             if (driver == null)
             {

@@ -10,26 +10,26 @@ namespace Passenger.CommandHandlers
     /// </summary>
     public class TypeSubstitutionHandler
     {
-        private readonly IDriverBindings _driver;
+        private readonly PassengerConfiguration _cfg;
 
-        public TypeSubstitutionHandler(IDriverBindings driver)
+        public TypeSubstitutionHandler(PassengerConfiguration cfg)
         {
-            _driver = driver;
+            _cfg = cfg;
         }
 
         public DriverBindings.TypeSubstitution FindSubstituteFor(Type type)
         {
-            if (_driver == null || _driver.Substitutes == null)
+            if (_cfg == null || _cfg.Driver.Substitutes == null)
             {
                 return null;
             }
 
-            if (!_driver.Substitutes.ToList().Any())
+            if (!_cfg.Driver.Substitutes.ToList().Any())
             {
                 return null;
             }
 
-            return _driver.Substitutes.ToList().SingleOrDefault(map => type == map.Type);
+            return _cfg.Driver.Substitutes.ToList().SingleOrDefault(map => type == map.Type);
         }
     }
 }

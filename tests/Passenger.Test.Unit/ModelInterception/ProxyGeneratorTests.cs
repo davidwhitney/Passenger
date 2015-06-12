@@ -12,12 +12,12 @@ namespace Passenger.Test.Unit.ModelInterception
     [TestFixture]
     public class ProxyGeneratorTests
     {
-        private IDriverBindings _fakeDriver;
+        private PassengerConfiguration _fakeDriver;
 
         [SetUp]
         public void Setup()
         {
-            _fakeDriver = new Mock<IDriverBindings>().Object;
+            _fakeDriver = new PassengerConfiguration {Driver = new Mock<IDriverBindings>().Object};
         }
 
         [Test]

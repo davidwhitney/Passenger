@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Reflection;
 using Passenger.Attributes;
-using Passenger.Drivers;
 using Passenger.ModelInterception;
 
 namespace Passenger
 {
     public class PageObject
     {
-        public IDriverBindings Driver { get; set; }
-        public string WebRoot { get; set; }
+        public PassengerConfiguration Configuration { get; set; }
         public object CurrentProxy { get; set; }
     }
     
@@ -20,16 +18,15 @@ namespace Passenger
         {
         }
 
-        public PageObject(IDriverBindings driver, TPageObjectType currentProxy)
+        public PageObject(PassengerConfiguration configuration, TPageObjectType currentProxy)
         {
-            Driver = driver;
+            Configuration = configuration;
             CurrentProxy = currentProxy;
         }
 
-        public PageObject(IDriverBindings driver, string webRoot)
+        public PageObject(PassengerConfiguration configuration)
         {
-            Driver = driver;
-            WebRoot = webRoot;
+            Configuration = configuration;
 
             GoTo<TPageObjectType>();
         }
@@ -37,7 +34,7 @@ namespace Passenger
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             CurrentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Driver.NavigateTo(UrlFor(CurrentProxy));
+            Configuration.Driver.NavigateTo(UrlFor(CurrentProxy));
             return (TNextPageObjectType)CurrentProxy;
         }
 
@@ -50,7 +47,7 @@ namespace Passenger
         {
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
             var urlOfNextPage = UrlFor(nextPage);
-            if (!Driver.Url.Contains(urlOfNextPage.PathAndQuery))
+            if (!Configuration.Driver.Url.Contains(urlOfNextPage.PathAndQuery))
             {
                 throw new Exception("We're not where we should be.");
             }
@@ -60,7 +57,7 @@ namespace Passenger
         {
             if (CurrentProxy == null || CurrentProxy.GetType().BaseType != typeof (TCurrentPageObjectType))
             {
-                CurrentProxy = ProxyGenerator.Generate<TCurrentPageObjectType>(Driver);
+                CurrentProxy = ProxyGenerator.Generate<TCurrentPageObjectType>(Configuration);
             }
 
             return (TCurrentPageObjectType) CurrentProxy;
@@ -80,17 +77,17 @@ namespace Passenger
                 return attr.Uri;
             }
 
-            if (string.IsNullOrWhiteSpace(WebRoot))
+            if (string.IsNullOrWhiteSpace(Configuration.WebRoot))
             {
                 throw new Exception("You need to configure a WebRoot to use relative Uris");
             }
 
-            return new Uri(new Uri(WebRoot), attr.Uri);
+            return new Uri(new Uri(Configuration.WebRoot), attr.Uri);
         }
 
         public void Dispose()
         {
-            Driver.Dispose();
+            Configuration.Driver.Dispose();
         }
     }
 }

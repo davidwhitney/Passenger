@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Passenger.CommandHandlers;
-using Passenger.Drivers;
 using Castle.DynamicProxy;
 
 namespace Passenger.ModelInterception
 {
     public class PageObjectProxy : IInterceptor
     {
-        private readonly IDriverBindings _driver;
+        private readonly PassengerConfiguration _configuration;
         private readonly TypeSubstitutionHandler _typeSubstitution;
         private readonly ElementSelectionHandler _elementSelectionHandler;
 
-        public PageObjectProxy(IDriverBindings driver)
+        public PageObjectProxy(PassengerConfiguration configuration)
         {
-            _driver = driver;
-            _typeSubstitution = new TypeSubstitutionHandler(driver);
-            _elementSelectionHandler = new ElementSelectionHandler(driver);
+            _configuration = configuration;
+            _typeSubstitution = new TypeSubstitutionHandler(configuration);
+            _elementSelectionHandler = new ElementSelectionHandler(configuration);
         }
 
         public void Intercept(IInvocation invocation)
@@ -61,8 +60,8 @@ namespace Passenger.ModelInterception
             }
 
             invocation.ReturnValue = invocation.Method.ReturnType.IsAPageObject()
-                ? ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _driver)
-                : ProxyGenerator.Generate(invocation.Method.ReturnType, _driver);
+                ? ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _configuration)
+                : ProxyGenerator.Generate(invocation.Method.ReturnType, _configuration);
         }
 
         private static void Invoke(IInvocation invocation, InvocationResult result)
@@ -78,7 +77,7 @@ namespace Passenger.ModelInterception
 
         private object GenerateComponentProxy(PropertyInfo property)
         {
-            return ProxyGenerator.Generate(property.PropertyType, _driver);
+            return ProxyGenerator.Generate(property.PropertyType, _configuration);
         }
         
         private class InvocationSwitchboard : Dictionary<Func<bool>, Func<InvocationResult>>

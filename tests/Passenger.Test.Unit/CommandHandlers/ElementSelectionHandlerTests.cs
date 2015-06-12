@@ -30,7 +30,8 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             _mockDriver = new Mock<IDriverBindings>();
             _mockDriver.Setup(x => x.NavigationHandlers).Returns(_navHandlers);
-            _handler = new ElementSelectionHandler(_mockDriver.Object);
+            var cfg = new PassengerConfiguration { Driver = _mockDriver.Object };
+            _handler = new ElementSelectionHandler(cfg);
         }
 
         [Test]
