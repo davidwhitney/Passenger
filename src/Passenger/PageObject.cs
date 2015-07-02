@@ -9,27 +9,6 @@ namespace Passenger
     {
         public PassengerConfiguration Configuration { get; set; }
         public object CurrentProxy { get; set; }
-    }
-    
-    public class PageObject<TPageObjectType> 
-        : PageObject, IDisposable where TPageObjectType : class
-    {
-        public PageObject()
-        {
-        }
-
-        public PageObject(PassengerConfiguration configuration, TPageObjectType currentProxy)
-        {
-            Configuration = configuration;
-            CurrentProxy = currentProxy;
-        }
-
-        public PageObject(PassengerConfiguration configuration)
-        {
-            Configuration = configuration;
-
-            GoTo<TPageObjectType>();
-        }
 
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
@@ -88,6 +67,27 @@ namespace Passenger
         public void Dispose()
         {
             Configuration.Driver.Dispose();
+        }
+    }
+    
+    public class PageObject<TPageObjectType> 
+        : PageObject, IDisposable where TPageObjectType : class
+    {
+        public PageObject()
+        {
+        }
+
+        public PageObject(PassengerConfiguration configuration, TPageObjectType currentProxy)
+        {
+            Configuration = configuration;
+            CurrentProxy = currentProxy;
+        }
+
+        public PageObject(PassengerConfiguration configuration)
+        {
+            Configuration = configuration;
+
+            GoTo<TPageObjectType>();
         }
     }
 }
