@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Passenger.ModelInterception;
 using Passenger.PageObjectInspections.UrlDiscovery;
 
@@ -25,7 +26,9 @@ namespace Passenger
         {
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
             var discoveredUrl = UrlFor(nextPage);
-            if (!Configuration.UrlVerificationStrategy.UrlMatches(Configuration.Driver.Url, discoveredUrl))
+
+            var verifier = Configuration.UrlVerificationStrategies.First(x => x.Supports(discoveredUrl));
+            if (!verifier.UrlMatches(Configuration.Driver.Url, discoveredUrl))
             {
                 throw new Exception("We're not where we should be.");
             }

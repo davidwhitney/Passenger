@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Passenger.Drivers;
 using Passenger.PageObjectInspections.UrlDiscovery;
 using Passenger.PageObjectInspections.UrlVerification;
@@ -10,12 +11,17 @@ namespace Passenger
         public IDriverBindings Driver { get; set; }
         public string WebRoot { get; set; }
 
-        public IVerifyUrls UrlVerificationStrategy { get; set; }
+        public List<IVerifyUrls> UrlVerificationStrategies { get; set; }
         public IDiscoverUrls UrlDiscoveryStrategy { get; set; }
 
         public PassengerConfiguration()
         {
-            UrlVerificationStrategy = new StringContainingStrategy();
+            UrlVerificationStrategies = new List<IVerifyUrls>
+            {
+                new RegexStrategy(),
+                new StringContainingStrategy(),
+            };
+
             UrlDiscoveryStrategy = new DefaultUrlDiscoveryStrategy();
         }
 

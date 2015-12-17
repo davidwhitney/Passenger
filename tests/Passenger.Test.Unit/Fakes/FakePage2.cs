@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Passenger.Attributes;
 
 namespace Passenger.Test.Unit.Fakes

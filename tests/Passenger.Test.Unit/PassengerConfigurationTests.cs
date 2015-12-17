@@ -11,7 +11,8 @@ namespace Passenger.Test.Unit
         {
             var config = new PassengerConfiguration();
 
-            Assert.That(config.UrlVerificationStrategy, Is.TypeOf<StringContainingStrategy>());
+            Assert.That(config.UrlVerificationStrategies[0], Is.TypeOf<RegexStrategy>());
+            Assert.That(config.UrlVerificationStrategies[1], Is.TypeOf<StringContainingStrategy>());
         }
     }
 }

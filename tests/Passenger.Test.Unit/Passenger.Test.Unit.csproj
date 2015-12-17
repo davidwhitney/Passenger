@@ -70,6 +70,7 @@
     <Compile Include="ExampleUsage.cs" />
     <Compile Include="Fakes\FakePage.cs" />
     <Compile Include="Fakes\FakePage2.cs" />
+    <Compile Include="Fakes\FakePageWithRegex.cs" />
     <Compile Include="Fakes\FakeUrlVerifier.cs" />
     <Compile Include="Fakes\FakeWebDriverTests.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\RegexStrategyTests.cs" />

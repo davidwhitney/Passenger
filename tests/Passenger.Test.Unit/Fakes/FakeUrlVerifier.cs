@@ -9,6 +9,11 @@ namespace Passenger.Test.Unit.Fakes
         public string Url { get; set; }
         public DiscoveredUrl Expectation { get; set; }
 
+        public bool Supports(DiscoveredUrl expectation)
+        {
+            return true;
+        }
+
         public bool UrlMatches(string url, DiscoveredUrl expectation)
         {
             Called = true;

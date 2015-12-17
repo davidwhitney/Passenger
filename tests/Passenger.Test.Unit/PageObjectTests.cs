@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
+using Passenger.PageObjectInspections.UrlVerification;
 using Passenger.Test.Unit.Fakes;
 
 namespace Passenger.Test.Unit
@@ -19,11 +21,11 @@ namespace Passenger.Test.Unit
         [Test]
         public void VerifyRedirection_DelegatesUrlVerificationToConfiguredStartegy()
         {
-            _config.UrlVerificationStrategy = new FakeUrlVerifier();
+            _config.UrlVerificationStrategies = new List<IVerifyUrls> {new FakeUrlVerifier()};
             
             _po.VerifyRedirectionTo<FakePage>();
 
-            Assert.That(((FakeUrlVerifier)_config.UrlVerificationStrategy).Called, Is.True);
+            Assert.That(((FakeUrlVerifier)_config.UrlVerificationStrategies[0]).Called, Is.True);
         }
     }
 }
