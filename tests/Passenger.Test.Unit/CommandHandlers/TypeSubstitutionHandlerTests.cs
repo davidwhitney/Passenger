@@ -2,6 +2,7 @@
 using Passenger.Drivers;
 using Passenger.Test.Unit.ModelInterception;
 using NUnit.Framework;
+using Passenger.Test.Unit.Fakes;
 
 namespace Passenger.Test.Unit.CommandHandlers
 {
@@ -9,12 +10,12 @@ namespace Passenger.Test.Unit.CommandHandlers
     public class TypeSubstitutionHandlerTests
     {
         private TypeSubstitutionHandler _handler;
-        private TotallyFakeWebDriver _fakeDriver;
+        private FakeWebDriver _fakeDriver;
 
         [SetUp]
         public void Setup()
         {
-            _fakeDriver = new TotallyFakeWebDriver();
+            _fakeDriver = new FakeWebDriver();
             _handler = new TypeSubstitutionHandler(new PassengerConfiguration { Driver = _fakeDriver });
         }
 

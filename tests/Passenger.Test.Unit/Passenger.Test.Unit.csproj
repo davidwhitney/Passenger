@@ -68,10 +68,18 @@
     <Compile Include="Drivers\RemoteWebDriver\PassengerConfigurationExtensionsForWebDriverRegistrationTests.cs" />
     <Compile Include="Drivers\RemoteWebDriver\WebDriverBindingsTests.cs" />
     <Compile Include="ExampleUsage.cs" />
+    <Compile Include="Fakes\FakePage.cs" />
+    <Compile Include="Fakes\FakePage2.cs" />
+    <Compile Include="Fakes\FakeUrlVerifier.cs" />
+    <Compile Include="Fakes\FakeWebDriverTests.cs" />
+    <Compile Include="PageObjectInspections\UrlVerification\RegexStrategyTests.cs" />
+    <Compile Include="PageObjectInspections\UrlVerification\StringContainingStrategyTests.cs" />
+    <Compile Include="PageObjectTests.cs" />
+    <Compile Include="PassengerConfigurationTests.cs" />
     <Compile Include="ReflectionExtensionsTests.cs" />
     <Compile Include="ModelInterception\ProxyGeneratorTests.cs" />
     <Compile Include="ModelInterception\PageObjectProxyTests.cs" />
-    <Compile Include="ModelInterception\TotallyFakeWebDriver.cs" />
+    <Compile Include="Fakes\FakeWebDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +99,9 @@
     <Content Include="phantomjs-license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PageObjectInspections\UrlDiscovery\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

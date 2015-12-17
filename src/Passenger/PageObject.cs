@@ -26,7 +26,7 @@ namespace Passenger
         {
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
             var urlOfNextPage = UrlFor(nextPage);
-            if (!Configuration.Driver.Url.Contains(urlOfNextPage.PathAndQuery))
+            if (!Configuration.UrlVerificationStrategy.UrlMatches(Configuration.Driver.Url, urlOfNextPage.PathAndQuery))
             {
                 throw new Exception("We're not where we should be.");
             }
@@ -44,24 +44,7 @@ namespace Passenger
 
         private Uri UrlFor(object classProxy)
         {
-            var attr = classProxy.GetType().GetCustomAttribute<UriAttribute>();
-
-            if (attr == null)
-            {
-                throw new Exception("Cannot navigate to a PageObject Object that doesn't have a [Uri(\"http://tempuri.org\")] attribute.");
-            }
-
-            if (attr.Uri.IsAbsoluteUri)
-            {
-                return attr.Uri;
-            }
-
-            if (string.IsNullOrWhiteSpace(Configuration.WebRoot))
-            {
-                throw new Exception("You need to configure a WebRoot to use relative Uris");
-            }
-
-            return new Uri(new Uri(Configuration.WebRoot), attr.Uri);
+            return Configuration.UrlDiscoveryStrategy.UrlFor(classProxy, Configuration);
         }
 
         public void Dispose()
