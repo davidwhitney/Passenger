@@ -1,4 +1,5 @@
-﻿using Passenger.PageObjectInspections.UrlVerification;
+﻿using Passenger.PageObjectInspections.UrlDiscovery;
+using Passenger.PageObjectInspections.UrlVerification;
 
 namespace Passenger.Test.Unit.Fakes
 {
@@ -6,9 +7,9 @@ namespace Passenger.Test.Unit.Fakes
     {
         public bool Called { get; set; }
         public string Url { get; set; }
-        public string Expectation { get; set; }
+        public DiscoveredUrl Expectation { get; set; }
 
-        public bool UrlMatches(string url, string expectation)
+        public bool UrlMatches(string url, DiscoveredUrl expectation)
         {
             Called = true;
             Url = url;

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Reflection;
-using Passenger.Attributes;
 using Passenger.ModelInterception;
+using Passenger.PageObjectInspections.UrlDiscovery;
 
 namespace Passenger
 {
@@ -13,7 +12,7 @@ namespace Passenger
         public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             CurrentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Configuration.Driver.NavigateTo(UrlFor(CurrentProxy));
+            Configuration.Driver.NavigateTo(UrlFor(CurrentProxy).Url);
             return (TNextPageObjectType)CurrentProxy;
         }
 
@@ -25,8 +24,8 @@ namespace Passenger
         public void VerifyRedirectionTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
-            var urlOfNextPage = UrlFor(nextPage);
-            if (!Configuration.UrlVerificationStrategy.UrlMatches(Configuration.Driver.Url, urlOfNextPage.PathAndQuery))
+            var discoveredUrl = UrlFor(nextPage);
+            if (!Configuration.UrlVerificationStrategy.UrlMatches(Configuration.Driver.Url, discoveredUrl))
             {
                 throw new Exception("We're not where we should be.");
             }
@@ -42,7 +41,7 @@ namespace Passenger
             return (TCurrentPageObjectType) CurrentProxy;
         }
 
-        private Uri UrlFor(object classProxy)
+        private DiscoveredUrl UrlFor(object classProxy)
         {
             return Configuration.UrlDiscoveryStrategy.UrlFor(classProxy, Configuration);
         }

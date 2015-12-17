@@ -4,6 +4,6 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
 {
     public interface IDiscoverUrls
     {
-        Uri UrlFor(object potentialPageObject, PassengerConfiguration configuration);
+        DiscoveredUrl UrlFor(object potentialPageObject, PassengerConfiguration configuration);
     }
 }

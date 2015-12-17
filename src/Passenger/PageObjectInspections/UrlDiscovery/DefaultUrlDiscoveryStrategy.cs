@@ -6,7 +6,7 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
 {
     public class DefaultUrlDiscoveryStrategy : IDiscoverUrls
     {
-        public Uri UrlFor(object classProxy, PassengerConfiguration configuration)
+        public DiscoveredUrl UrlFor(object classProxy, PassengerConfiguration configuration)
         {
             var attr = classProxy.GetType().GetCustomAttribute<UriAttribute>();
 
@@ -17,7 +17,7 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
 
             if (attr.Uri.IsAbsoluteUri)
             {
-                return attr.Uri;
+                return new DiscoveredUrl { Url = attr.Uri, SourceAttribute = attr };
             }
 
             if (string.IsNullOrWhiteSpace(configuration.WebRoot))
@@ -25,7 +25,7 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
                 throw new Exception("You need to configure a WebRoot to use relative Uris");
             }
 
-            return new Uri(new Uri(configuration.WebRoot), attr.Uri);
+            return new DiscoveredUrl { Url = new Uri(new Uri(configuration.WebRoot), attr.Uri), SourceAttribute = attr };
         }
     }
 }

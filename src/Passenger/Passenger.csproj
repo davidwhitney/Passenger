@@ -67,6 +67,7 @@
     <Compile Include="ModelInterception\NavigationProxy.cs" />
     <Compile Include="Arrives.cs" />
     <Compile Include="PageObjectInspections\UrlDiscovery\DefaultUrlDiscoveryStrategy.cs" />
+    <Compile Include="PageObjectInspections\UrlDiscovery\DiscoveredUrl.cs" />
     <Compile Include="PageObjectInspections\UrlDiscovery\IDiscoverUrls.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\IVerifyUrls.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\RegexStrategy.cs" />

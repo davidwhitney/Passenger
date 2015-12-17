@@ -1,7 +1,9 @@
-﻿namespace Passenger.PageObjectInspections.UrlVerification
+﻿using Passenger.PageObjectInspections.UrlDiscovery;
+
+namespace Passenger.PageObjectInspections.UrlVerification
 {
     public interface IVerifyUrls
     {
-        bool UrlMatches(string url, string expectation);
+        bool UrlMatches(string url, DiscoveredUrl expectation);
     }
 }
