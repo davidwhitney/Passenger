@@ -32,5 +32,21 @@ namespace Passenger.Test.Unit.PageObjectInspections.UrlVerification
 
             Assert.That(_strat.Supports(discoveredUrl), Is.True);
         }
+
+        [Test]
+        public void UrlMatches_VerificationPatternProvidedAndRegexMatches_ReturnsTrue()
+        {
+            var discoveredUrl = new DiscoveredUrl(new Uri("http://tempuri.org"), new UriAttribute("http://tempuri.org", ".+tempuri\\.[a-z]+"));
+
+            Assert.That(_strat.UrlMatches("http://tempuri.org", discoveredUrl), Is.True);
+        }
+
+        [Test]
+        public void UrlMatches_VerificationPatternProvidedAndRegexDoesNotMatch_ReturnsFalse()
+        {
+            var discoveredUrl = new DiscoveredUrl(new Uri("http://tempuri.org"), new UriAttribute("http://tempuri.org", ".+nopenopenope\\.[a-z]+"));
+
+            Assert.That(_strat.UrlMatches("http://tempuri.org", discoveredUrl), Is.False);
+        }
     }
 }

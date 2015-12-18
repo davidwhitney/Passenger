@@ -11,7 +11,12 @@ namespace Passenger.PageObjectInspections.UrlVerification
 
         public bool UrlMatches(string actualUrl, DiscoveredUrl expectation)
         {
-            return actualUrl.Contains(expectation.Url.PathAndQuery);
+            if (expectation.Url.IsAbsoluteUri)
+            {
+                return actualUrl.Contains(expectation.Url.OriginalString);
+            }
+
+            return actualUrl.Contains(expectation.Url.OriginalString);
         }
     }
 }

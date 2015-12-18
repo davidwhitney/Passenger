@@ -219,7 +219,7 @@ The Uri attribute supports either **fully qualified Urls** or **relative paths**
 The Uri attribute supports an optional verification pattern regular expression - if you provide one, any calls to verify page transitions will validate against this regex, allowing you finer grained control over checking for correct page transitions. Setting up a verification pattern is easy, just provide it as a second parameter in your Uri attribute declaration.
 
 ```csharp
-[Uri("http://tempuri.org", "http://tempuri\\.[a-z]+")]
+[Uri("http://tempuri.org", ".+tempuri\\.[a-z]+")]
 ```
 
 ## Collections
