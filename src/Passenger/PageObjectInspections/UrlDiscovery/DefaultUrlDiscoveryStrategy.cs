@@ -17,7 +17,7 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
 
             if (attr.Uri.IsAbsoluteUri)
             {
-                return new DiscoveredUrl { Url = attr.Uri, SourceAttribute = attr };
+                return new DiscoveredUrl(attr.Uri, attr);
             }
 
             if (string.IsNullOrWhiteSpace(configuration.WebRoot))
@@ -25,7 +25,7 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
                 throw new Exception("You need to configure a WebRoot to use relative Uris");
             }
 
-            return new DiscoveredUrl { Url = new Uri(new Uri(configuration.WebRoot), attr.Uri), SourceAttribute = attr };
+            return new DiscoveredUrl(new Uri(new Uri(configuration.WebRoot), attr.Uri), attr);
         }
     }
 }

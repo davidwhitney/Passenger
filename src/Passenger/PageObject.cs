@@ -27,7 +27,7 @@ namespace Passenger
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
             var discoveredUrl = UrlFor(nextPage);
 
-            var verifier = Configuration.UrlVerificationStrategies.First(x => x.Supports(discoveredUrl));
+            var verifier = Configuration.UrlVerificationStrategies.StrategyFor(discoveredUrl);
             if (!verifier.UrlMatches(Configuration.Driver.Url, discoveredUrl))
             {
                 throw new Exception("We're not where we should be.");

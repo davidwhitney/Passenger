@@ -7,5 +7,11 @@ namespace Passenger.PageObjectInspections.UrlDiscovery
     {
         public Uri Url { get; set; }
         public UriAttribute SourceAttribute { get; set; }
+
+        public DiscoveredUrl(Uri url, UriAttribute sourceAttribute)
+        {
+            Url = url;
+            SourceAttribute = sourceAttribute;
+        }
     }
 }

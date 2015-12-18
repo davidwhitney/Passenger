@@ -79,6 +79,7 @@
     <Compile Include="PageObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drivers\RemoteWebDriver\WebDriverBindings.cs" />
+    <Compile Include="PageObjectInspections\UrlVerification\UrlVerificationStrategyCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

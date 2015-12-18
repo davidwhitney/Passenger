@@ -21,7 +21,7 @@ namespace Passenger.Test.Unit
         [Test]
         public void VerifyRedirection_DelegatesUrlVerificationToConfiguredStartegy()
         {
-            _config.UrlVerificationStrategies = new List<IVerifyUrls> {new FakeUrlVerifier()};
+            _config.UrlVerificationStrategies = new UrlVerificationStrategyCollection {new FakeUrlVerifier()};
             
             _po.VerifyRedirectionTo<FakePage>();
 
