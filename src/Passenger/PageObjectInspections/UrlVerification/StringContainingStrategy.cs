@@ -9,9 +9,9 @@ namespace Passenger.PageObjectInspections.UrlVerification
             return true;
         }
 
-        public bool UrlMatches(string url, DiscoveredUrl expectation)
+        public bool UrlMatches(string actualUrl, DiscoveredUrl expectation)
         {
-            return url.Contains(expectation.Url.PathAndQuery);
+            return actualUrl.Contains(expectation.Url.PathAndQuery);
         }
     }
 }

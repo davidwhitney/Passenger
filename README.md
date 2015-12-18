@@ -214,7 +214,13 @@ Selenium will go and fetch the page using the Url in the page object attribute, 
 
 ## The Uri attribute
 
-The Uri attribute supports either **fully qualified Urls** or **relative paths**. Relative paths are prefered, but when used, the PassengerConfiguration must have it's **WebRoot** property set. An exception will be thrown if you forget to do this.
+The Uri attribute supports either **fully qualified Urls** or **relative paths**. Relative paths are preferred, but when used, the PassengerConfiguration must have it's **WebRoot** property set. An exception will be thrown if you forget to do this.
+
+The Uri attribute supports an optional verification pattern regular expression - if you provide one, any calls to verify page transitions will validate against this regex, allowing you finer grained control over checking for correct page transitions. Setting up a verification pattern is easy, just provide it as a second parameter in your Uri attribute declaration.
+
+```csharp
+[Uri("http://tempuri.org", "http://tempuri\\.[a-z]+")]
+```
 
 ## Collections
 

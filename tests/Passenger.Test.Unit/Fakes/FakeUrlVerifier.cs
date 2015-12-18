@@ -14,10 +14,10 @@ namespace Passenger.Test.Unit.Fakes
             return true;
         }
 
-        public bool UrlMatches(string url, DiscoveredUrl expectation)
+        public bool UrlMatches(string actualUrl, DiscoveredUrl expectation)
         {
             Called = true;
-            Url = url;
+            Url = actualUrl;
             Expectation = expectation;
             return true;
         }

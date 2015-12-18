@@ -25,10 +25,10 @@ namespace Passenger
         public void VerifyRedirectionTo<TNextPageObjectType>() where TNextPageObjectType : class
         {
             var nextPage = CreateOrReturnProxy<TNextPageObjectType>();
-            var discoveredUrl = UrlFor(nextPage);
+            var expectedUrl = UrlFor(nextPage);
 
-            var verifier = Configuration.UrlVerificationStrategies.StrategyFor(discoveredUrl);
-            if (!verifier.UrlMatches(Configuration.Driver.Url, discoveredUrl))
+            var verifier = Configuration.UrlVerificationStrategies.StrategyFor(expectedUrl);
+            if (!verifier.UrlMatches(Configuration.Driver.Url, expectedUrl))
             {
                 throw new Exception("We're not where we should be.");
             }

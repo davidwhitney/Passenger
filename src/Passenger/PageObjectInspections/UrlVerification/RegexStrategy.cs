@@ -9,9 +9,9 @@ namespace Passenger.PageObjectInspections.UrlVerification
             return !string.IsNullOrWhiteSpace(expectation.SourceAttribute.VerificationPattern);
         }
 
-        public bool UrlMatches(string url, DiscoveredUrl expectation)
+        public bool UrlMatches(string actualUrl, DiscoveredUrl expectation)
         {
-            return expectation.SourceAttribute.VerificationRegex.IsMatch(url);
+            return expectation.SourceAttribute.VerificationRegex.IsMatch(actualUrl);
         }
     }
 }
