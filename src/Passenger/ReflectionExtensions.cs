@@ -58,7 +58,7 @@ namespace Passenger
 
         public static bool IsAWebElement(this Type type)
         {
-            return type.GetInterfaces().Contains(typeof (IWebElement));
+            return type == typeof(IWebElement) || type.GetInterfaces().Contains(typeof (IWebElement));
         }
 
         public static bool IsAPassengerElement(this Type type)

@@ -58,7 +58,7 @@ namespace Passenger.CommandHandlers
         {
             try
             {
-                var asEnumerable = ((IEnumerable) elements);
+                var asEnumerable = (IEnumerable) elements;
                 var enumerator = asEnumerable.GetEnumerator();
                 enumerator.MoveNext();
                 return enumerator.Current;

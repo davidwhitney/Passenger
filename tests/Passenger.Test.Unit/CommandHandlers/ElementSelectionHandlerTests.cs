@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using Passenger.Attributes;
 using Passenger.CommandHandlers;
@@ -21,7 +22,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         private List<DriverBindings.IHandle> _navHandlers;
         private List<string> _collection;
 
-        [SetUp]
+       [SetUp]
         public void Setup()
         {
             _someDivPropertyInfo = typeof (SelectionTestClass).GetProperty("SomeDiv");
@@ -84,6 +85,35 @@ namespace Passenger.Test.Unit.CommandHandlers
             var selected = _handler.SelectElement(idFromStrings, stringsPi);
 
             Assert.That(selected, Is.EqualTo(_collection));
+        }
+
+        [Test]
+        public void SelectElement_TargetTypeIsACollectionOfIWebElements_CollectionReturned()
+        {
+            var divs = typeof(SelectionTestClass).GetProperty("ListOfSomeDiv");
+            var idFromDivs = divs.GetCustomAttribute<IdAttribute>();
+            var collectionOfWebElements = new List<IWebElement>();
+
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => collectionOfWebElements));
+
+            var selected = _handler.SelectElement(idFromDivs, divs);
+
+            Assert.That(selected, Is.EqualTo(collectionOfWebElements));
+        }
+
+        [Test]
+        public void SelectElement_TargetTypeIsACollectionOfIWebElementsDriverReturnsAReadOnlyCollection_CollectionReturned()
+        {
+            var divs = typeof(SelectionTestClass).GetProperty("ListOfSomeDiv");
+            var idFromDivs = divs.GetCustomAttribute<IdAttribute>();
+            var collectionOfWebElements = new List<IWebElement>();
+            var roCollectionOfWebElements = new ReadOnlyCollection<IWebElement>(collectionOfWebElements);
+
+            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => roCollectionOfWebElements));
+
+            var selected = _handler.SelectElement(idFromDivs, divs);
+
+            Assert.That(selected, Is.EqualTo(collectionOfWebElements));
         }
 
         [Test]
@@ -179,6 +209,9 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             [Id]
             public virtual MyButton[] ArrayOfButtons { get; set; }
+
+            [Id]
+            public virtual List<IWebElement> ListOfSomeDiv { get; set; }
         }
 
         public class MyButton : IPassengerElement
