@@ -80,6 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drivers\RemoteWebDriver\WebDriverBindings.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\UrlVerificationStrategyCollection.cs" />
+    <Compile Include="UriExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

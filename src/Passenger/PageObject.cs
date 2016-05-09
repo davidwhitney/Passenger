@@ -10,10 +10,13 @@ namespace Passenger
         public PassengerConfiguration Configuration { get; set; }
         public object CurrentProxy { get; set; }
 
-        public TNextPageObjectType GoTo<TNextPageObjectType>() where TNextPageObjectType : class
+        public TNextPageObjectType GoTo<TNextPageObjectType>(Uri uri = null) where TNextPageObjectType : class
         {
             CurrentProxy = CreateOrReturnProxy<TNextPageObjectType>();
-            Configuration.Driver.NavigateTo(UrlFor(CurrentProxy).Url);
+
+            var url = uri ?? UrlFor(CurrentProxy).Url;
+            Configuration.Driver.NavigateTo(url);
+
             return (TNextPageObjectType)CurrentProxy;
         }
 
@@ -68,11 +71,11 @@ namespace Passenger
             CurrentProxy = currentProxy;
         }
 
-        public PageObject(PassengerConfiguration configuration)
+        public PageObject(PassengerConfiguration configuration, Uri uri = null)
         {
             Configuration = configuration;
 
-            GoTo<TPageObjectType>();
+            GoTo<TPageObjectType>(uri);
         }
     }
 }

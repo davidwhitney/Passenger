@@ -24,14 +24,17 @@ namespace Passenger
             UrlDiscoveryStrategy = new DefaultUrlDiscoveryStrategy();
         }
 
-        public PageObject<TPageObjectType> StartTestAt<TPageObjectType>() where TPageObjectType : class
+        /// <param name="uri">Override any Attribute provided Uri for the start page</param>
+        public PageObject<TPageObjectType> StartTestAt<TPageObjectType>(Uri uri = null) where TPageObjectType : class
         {
             if (Driver == null)
             {
                 throw new ArgumentException("Must configure a driver.");
             }
 
-            return new PageObject<TPageObjectType>(this);
+            uri = uri.EnsureFullyQualifiedUri(this);
+            return new PageObject<TPageObjectType>(this, uri);
         }
+
     }
 }
