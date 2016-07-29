@@ -40,7 +40,7 @@ namespace Passenger.CommandHandlers
             var wrappedItems = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
             foreach (var item in (IEnumerable) sourceElement)
             {
-                var itemToAdd = CreateWrappedOrProxiedItem(elementType, item, configuration);
+                var itemToAdd = CreateWrappedOrProxiedItem(item, elementType, configuration);
                 wrappedItems.Add(itemToAdd);
             }
 
@@ -59,7 +59,7 @@ namespace Passenger.CommandHandlers
             return (IEnumerable)Activator.CreateInstance(targetType, wrappedItems);
         }
 
-        private static object CreateWrappedOrProxiedItem(Type ofType, object sourceItem, PassengerConfiguration configuration)
+        private static object CreateWrappedOrProxiedItem(object sourceItem, Type ofType, PassengerConfiguration configuration)
         {
             var itemToAdd = sourceItem;
 
@@ -76,10 +76,10 @@ namespace Passenger.CommandHandlers
             return itemToAdd;
         }
 
-        public static IPassengerElement WrapIntoPassengerElement(object singleElement, Type targetType)
+        public static IPassengerElement WrapIntoPassengerElement(object sourceItem, Type targetType)
         {
             var wrapper = (IPassengerElement)Activator.CreateInstance(targetType);
-            wrapper.Inner = (IWebElement)singleElement;
+            wrapper.Inner = (IWebElement)sourceItem;
             return wrapper;
         }
     }

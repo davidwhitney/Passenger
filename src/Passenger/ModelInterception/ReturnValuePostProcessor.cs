@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.DynamicProxy;
 using OpenQA.Selenium;
 using Passenger.Attributes;
@@ -37,6 +38,12 @@ namespace Passenger.ModelInterception
                 return null;
             }
 
+            var snapshotOfCollection = new List<object>();
+            if (current.IsCollection())
+            {
+                snapshotOfCollection.AddRange(((IEnumerable)current).Cast<object>());
+            }
+
             if (!ctx.IsPageComponent)
             {
                 if (ctx.RawSelectedElement.IsAWebElement()
@@ -59,10 +66,25 @@ namespace Passenger.ModelInterception
 
             if (current.IsCollection())
             {
-                
+                MapSnapshotToInnerProperty(current, snapshotOfCollection);
             }
 
             return current;
+        }
+
+        private static void MapSnapshotToInnerProperty(object current, IReadOnlyList<object> snapshotOfCollection)
+        {
+            var en = (IEnumerable) current;
+            var i = 0;
+            foreach (var item in en)
+            {
+                if (item.IsAPassengerElement())
+                {
+                    var wrapper = (IPassengerElement) item;
+                    wrapper.Inner = (IWebElement) snapshotOfCollection[i];
+                }
+                i++;
+            }
         }
     }
 }

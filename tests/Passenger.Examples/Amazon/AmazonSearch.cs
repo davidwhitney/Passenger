@@ -162,18 +162,15 @@ namespace Passenger.Examples.Amazon
             using (var context = testConfig.StartTestAt<Homepage>())
             {
                 // Passes
-                var elementAt = context.Page<Homepage>().FirstMenuItem;
+                var menuItems = context.Page<Homepage>().MenuItems;
 
-                elementAt.Inner.Click();
-
-                // Fails - null reference
-                var logoThroughAttribute = elementAt.LogoThroughAttribute;
-                logoThroughAttribute.Click();
+                //menuItems.ElementAt(0).Inner.Click();
 
                 // Fails - null reference
-                var logoThroughDriver = elementAt.LogoThroughDriver();
-                logoThroughDriver.Click();
+                menuItems.ElementAt(0).LogoThroughDriver().Click();
 
+                // Fails - null reference
+                //menuItems.ElementAt(0).LogoThroughAttribute.Click();
             }
         }
     }
