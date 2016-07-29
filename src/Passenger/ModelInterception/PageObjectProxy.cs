@@ -42,7 +42,7 @@ namespace Passenger.ModelInterception
                 {() => ElementFor(ctx) != null, () => Assign(ElementFor(ctx))}
             }.Route();
 
-            EnsureAnyElementsAreSaflyLoaded(ctx);
+            EnsureAnyElementsAreSafelyLoaded(ctx);
 
             invocation.Assign(result);
             invocation.ReturnValue = _postProcessor.PostProcessReturnValue(invocation.ReturnValue, ctx, _configuration);
@@ -53,7 +53,7 @@ namespace Passenger.ModelInterception
             return _typeSubstitution.FindSubstituteFor(ctx.TargetProperty.PropertyType)?.GetInstance();
         }
 
-        private void EnsureAnyElementsAreSaflyLoaded(PropertySelectionContext ctx)
+        private void EnsureAnyElementsAreSafelyLoaded(PropertySelectionContext ctx)
         {
             try { ElementFor(ctx); } catch { /* ¯_(ツ)_/¯ */ }
         }
