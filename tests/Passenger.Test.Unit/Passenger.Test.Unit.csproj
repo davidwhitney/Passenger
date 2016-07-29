@@ -73,6 +73,8 @@
     <Compile Include="Fakes\FakePageWithRegex.cs" />
     <Compile Include="Fakes\FakeUrlVerifier.cs" />
     <Compile Include="Fakes\FakeWebDriverTests.cs" />
+    <Compile Include="Fakes\FakeWebElement.cs" />
+    <Compile Include="ModelInterception\ReturnValuePostProcessorTests.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\RegexStrategyTests.cs" />
     <Compile Include="PageObjectInspections\UrlVerification\StringContainingStrategyTests.cs" />
     <Compile Include="PageObjectTests.cs" />

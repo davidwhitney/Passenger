@@ -5,6 +5,8 @@ using Passenger.Drivers;
 using Passenger.ModelInterception;
 using Moq;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using Passenger.Test.Unit.Fakes;
 
 namespace Passenger.Test.Unit.ModelInterception
 {
@@ -27,7 +29,8 @@ namespace Passenger.Test.Unit.ModelInterception
             _fakeDriver.Setup(x => x.NavigationHandlers).Returns(new List<DriverBindings.IHandle>
             {
                 new DriverBindings.Handle<IdAttribute>((s, d) => "an id string"),
-                new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string")
+                new DriverBindings.Handle<LinkTextAttribute>((s, d) => "a text string"),
+                new DriverBindings.Handle<CssSelectorAttribute>((s, d) => new FakeWebElement(s))
             });
 
             var cfg = new PassengerConfiguration { Driver = _fakeDriver.Object };
@@ -115,6 +118,41 @@ namespace Passenger.Test.Unit.ModelInterception
         }
 
         [Test]
+        public void Intercept_OnAPageComponentThatIsAWebElementButNoSelectorPresent_InnerIsNull()
+        {
+            var element = _proxy.PageComponentWhichIsAWebElementWithNoSelectors;
+
+            Assert.That(element.Inner, Is.Null);
+        }
+
+        [Test]
+        public void Intercept_OnAPageComponentThatIsAWebElement_InnerIsPopulatedUsingClassMappedSelectorAndPageComponentTakesPrecedenceOverWrapperElement()
+        {
+            var element = _proxy.PageComponentWhichIsAWebElementWithSelectors;
+
+            Assert.That(element.Inner, Is.Not.Null);
+            Assert.That(element.Inner.Text, Is.EqualTo("PageComponentWhichIsAWebElementWithSelectors"));
+        }
+
+        [Test]
+        public void Intercept_OnAPageComponentThatIsAWebElementWithNoSelecctors_SubstitutedValuesLikeTheDriverStillWork()
+        {
+            var element = _proxy.PageComponentWhichIsAWebElementWithNoSelectors.ATypeThatIsRegisteredForSubstitution;
+
+            Assert.That(element, Is.Not.Null);
+            Assert.That(element.Val, Is.EqualTo("Hi"));
+        }
+
+        [Test]
+        public void Intercept_OnAPageComponentThatIsAWebElement_SubstitutedValuesLikeTheDriverStillWork()
+        {
+            var element = _proxy.PageComponentWhichIsAWebElementWithSelectors.ATypeThatIsRegisteredForSubstitution;
+
+            Assert.That(element, Is.Not.Null);
+            Assert.That(element.Val, Is.EqualTo("Hi"));
+        }
+
+        [Test]
         public void Intercept_MethodThatTransitionsCalled_CorrectPageObjectReturned()
         {
             var newPageObject = _proxy.MethodThatTransitions();
@@ -154,6 +192,11 @@ namespace Passenger.Test.Unit.ModelInterception
             }
 
             public virtual MenuBar TotallyAPageComponent { get; set; }
+            public virtual PageComponentAndWebElement PageComponentWhichIsAWebElementWithNoSelectors { get; set; }
+
+            [CssSelector]
+            public virtual PageComponentAndWebElement PageComponentWhichIsAWebElementWithSelectors { get; set; }
+
             public virtual SubbedType ATypeThatIsRegisteredForSubstitution { get; set; }
 
             public virtual PageObject<SomethingElse> MethodThatTransitions()
@@ -187,6 +230,17 @@ namespace Passenger.Test.Unit.ModelInterception
         {
             [LinkText]
             public virtual string StringOnComponentThatIsInterceptedToo { get; set; }
+        }
+
+        [PageComponent]
+        public class PageComponentAndWebElement : IPassengerElement
+        {
+            public IWebElement Inner { get; set; }
+
+            [LinkText]
+            public virtual string StringOnComponentThatIsInterceptedToo { get; set; }
+
+            public virtual InterceptedType.SubbedType ATypeThatIsRegisteredForSubstitution { get; set; }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Passenger.CommandHandlers
 
         public DriverBindings.TypeSubstitution FindSubstituteFor(Type type)
         {
-            if (_cfg == null || _cfg.Driver.Substitutes == null)
+            if (_cfg?.Driver.Substitutes == null)
             {
                 return null;
             }

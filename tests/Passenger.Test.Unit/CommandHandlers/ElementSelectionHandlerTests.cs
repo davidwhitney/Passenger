@@ -9,6 +9,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.PhantomJS;
+using Passenger.ModelInterception;
 
 namespace Passenger.Test.Unit.CommandHandlers
 {
@@ -129,67 +130,7 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             Assert.That(selected, Is.EqualTo(_collection[0]));
         }
-
-        [Test]
-        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndWebElementReturned_WrappedInstanceCreated()
-        {
-            var property = typeof(SelectionTestClass).GetProperty("Button");
-            var id = property.GetCustomAttribute<IdAttribute>();
-            var domElement = new PhantomJSWebElement(null, null);
-            
-            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElement));
-
-            var selected = _handler.SelectElement(id, property);
-
-            Assert.That(selected, Is.InstanceOf<MyButton>());
-            Assert.That(((MyButton)selected).Inner, Is.EqualTo(domElement));
-        }
-
-        [Test]
-        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndMultipleWebElementReturned_WrappedInstancesCreated()
-        {
-            var property = typeof(SelectionTestClass).GetProperty("Buttons");
-            var id = property.GetCustomAttribute<IdAttribute>();
-            var domElements = new List<IWebElement>
-            {
-                new PhantomJSWebElement(null, null),
-                new FirefoxWebElement(null, null),
-                new PhantomJSWebElement(null, null),
-            };
-            
-            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElements));
-
-            var selected = _handler.SelectElement(id, property);
-
-            Assert.That(selected, Is.InstanceOf<List<MyButton>>());
-            Assert.That(((List<MyButton>)selected)[0].Inner, Is.EqualTo(domElements[0]));
-            Assert.That(((List<MyButton>)selected)[1].Inner, Is.EqualTo(domElements[1]));
-            Assert.That(((List<MyButton>)selected)[2].Inner, Is.EqualTo(domElements[2]));
-        }
-
-        [Test]
-        public void SelectElement_TargetTypeImplementsWrapperInterfaceAndMultipleWebElementReturned_WrappedInstancesCreatedForArray()
-        {
-            var property = typeof(SelectionTestClass).GetProperty("ArrayOfButtons");
-            var id = property.GetCustomAttribute<IdAttribute>();
-            var domElements = new List<IWebElement>
-            {
-                new PhantomJSWebElement(null, null),
-                new FirefoxWebElement(null, null),
-                new PhantomJSWebElement(null, null),
-            };
-            
-            _navHandlers.Add(new DriverBindings.Handle<IdAttribute>((s, bindings) => domElements));
-
-            var selected = _handler.SelectElement(id, property);
-
-            Assert.That(selected, Is.InstanceOf<MyButton[]>());
-            var buttonArray = (MyButton[]) selected;
-            Assert.That(buttonArray[0].Inner, Is.EqualTo(domElements[0]));
-            Assert.That(buttonArray[1].Inner, Is.EqualTo(domElements[1]));
-            Assert.That(buttonArray[2].Inner, Is.EqualTo(domElements[2]));
-        }
-
+        
         public class SelectionTestClass
         {
             [Id]

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.PhantomJS;
@@ -13,10 +12,12 @@ namespace Passenger.Test.Unit.CommandHandlers
     [TestFixture]
     public class TypeMappingTests
     {
+        private PassengerConfiguration _cfg = new PassengerConfiguration();
+
         [Test]
         public void ReturnOrMap_SourceIsNull_ReturnsNull()
         {
-            var result = TypeMapping.ReturnOrMap(null, typeof(PassengerTestElement));
+            var result = TypeMapping.ReturnOrMap(null, typeof(PassengerTestElement), _cfg);
 
             Assert.That(result, Is.Null);
         }
@@ -26,7 +27,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         {
             var webElement = new PhantomJSWebElement(null, null);
 
-            var result = TypeMapping.ReturnOrMap(webElement, typeof(IWebElement));
+            var result = TypeMapping.ReturnOrMap(webElement, typeof(IWebElement), _cfg);
 
             Assert.That(result, Is.EqualTo(webElement));
         }
@@ -36,7 +37,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         {
             var webElement = new PhantomJSWebElement(null, null);
 
-            var result = TypeMapping.ReturnOrMap(webElement, typeof (PassengerTestElement));
+            var result = TypeMapping.ReturnOrMap(webElement, typeof (PassengerTestElement), _cfg);
 
             Assert.That(result, Is.TypeOf<PassengerTestElement>());
             Assert.That(((IPassengerElement)result).Inner, Is.EqualTo(webElement));
@@ -47,7 +48,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         {
             var ele = new List<IWebElement> {new PhantomJSWebElement(null, null)};
 
-            var result = TypeMapping.ReturnOrMap(ele, typeof (List<PassengerTestElement>));
+            var result = TypeMapping.ReturnOrMap(ele, typeof (List<PassengerTestElement>), _cfg);
 
             Assert.That(result, Is.TypeOf<List<PassengerTestElement>>());
             Assert.That(((List<PassengerTestElement>)result)[0], Is.TypeOf<PassengerTestElement>());
@@ -59,7 +60,7 @@ namespace Passenger.Test.Unit.CommandHandlers
         {
             var ele = new List<IWebElement> {new PhantomJSWebElement(null, null)};
 
-            var ex = Assert.Throws<NotSupportedException>(() => TypeMapping.ReturnOrMap(ele, typeof (ICollection)));
+            var ex = Assert.Throws<NotSupportedException>(() => TypeMapping.ReturnOrMap(ele, typeof (ICollection), _cfg));
 
             Assert.That(ex.Message, Is.StringContaining("try using List<T>"));
         }

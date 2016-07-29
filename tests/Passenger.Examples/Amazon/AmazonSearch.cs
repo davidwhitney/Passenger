@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -69,7 +70,7 @@ namespace Passenger.Examples.Amazon
                     .SearchResultSomething();
             }
         }
-        
+
         [Uri("/")]
         public class Homepage
         {
@@ -109,6 +110,71 @@ namespace Passenger.Examples.Amazon
         public class Menu
         {
 
+        }
+    }
+
+
+    //[Ignore]
+    [TestFixture]
+    public class AmazonExample2
+    {
+        [PageComponent]
+        public class MenuItem : IPassengerElement
+        {
+            public IWebElement Inner { get; set; }
+
+            public virtual RemoteWebDriver Driver { get; set; }
+
+            [CssSelector(".nav-logo-link")]
+            public virtual IWebElement LogoThroughAttribute { get; set; }
+
+            public void ClickOnInner()
+            {
+                Inner.Click();
+            }
+
+            public IWebElement LogoThroughDriver()
+            {
+                return Driver.FindElement(By.CssSelector(".nav-logo-link"));
+            }
+        }
+
+        [Uri("/")]
+        public class Homepage
+        {
+            public virtual IWebDriver Driver { get; set; }
+
+            [CssSelector("#nav-xshop .nav-a")]
+            public virtual IEnumerable<MenuItem> MenuItems { get; set; }
+
+            [CssSelector("#nav-xshop .nav-a:nth-child(1)")]
+            public virtual MenuItem FirstMenuItem { get; set; }
+        }
+
+        [Test]
+        public void IPassengerCollection()
+        {
+            var testConfig = new PassengerConfiguration
+            {
+                WebRoot = "http://www.amazon.co.uk"
+            }.WithDriver(new PhantomJSDriver());
+
+            using (var context = testConfig.StartTestAt<Homepage>())
+            {
+                // Passes
+                var elementAt = context.Page<Homepage>().FirstMenuItem;
+
+                elementAt.Inner.Click();
+
+                // Fails - null reference
+                var logoThroughAttribute = elementAt.LogoThroughAttribute;
+                logoThroughAttribute.Click();
+
+                // Fails - null reference
+                var logoThroughDriver = elementAt.LogoThroughDriver();
+                logoThroughDriver.Click();
+
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Passenger.CommandHandlers
                 elements = SelectFirstItemFrom(elements, property);
             }
 
-            return TypeMapping.ReturnOrMap(elements, property.PropertyType);
+            return elements;
         }
 
         private DriverBindings.IHandle SelectHandlerForNavigationAttribute(Attribute attr, PropertyInfo property)

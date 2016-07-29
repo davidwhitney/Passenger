@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Passenger.CommandHandlers;
 using Castle.DynamicProxy;
+using static Passenger.ModelInterception.PageObjectProxy.InvocationResult;
 
 namespace Passenger.ModelInterception
 {
@@ -12,12 +13,14 @@ namespace Passenger.ModelInterception
         private readonly PassengerConfiguration _configuration;
         private readonly TypeSubstitutionHandler _typeSubstitution;
         private readonly ElementSelectionHandler _elementSelectionHandler;
+        private readonly ReturnValuePostProcessor _postProcessor;
 
         public PageObjectProxy(PassengerConfiguration configuration)
         {
             _configuration = configuration;
             _typeSubstitution = new TypeSubstitutionHandler(configuration);
             _elementSelectionHandler = new ElementSelectionHandler(configuration);
+            _postProcessor = new ReturnValuePostProcessor(configuration);
         }
 
         public void Intercept(IInvocation invocation)
@@ -25,57 +28,49 @@ namespace Passenger.ModelInterception
             if (!invocation.Method.IsProperty())
             {
                 invocation.Proceed();
-                PostProcessReturnValue(invocation);
+                _postProcessor.PostProcessReturnValue(invocation);
                 return;
             }
 
-            var property = invocation.Method.ToPropertyInfo();
-            var attributes = (property.GetCustomAttributes() ?? new List<Attribute>()).ToList();
-            var firstAttribute = attributes.FirstOrDefault();
+            var ctx = new PropertySelectionContext(invocation);
 
             var result = new InvocationSwitchboard
             {
-                {() => _typeSubstitution.FindSubstituteFor(property.PropertyType) != null, () => InvocationResult.Assign(_typeSubstitution.FindSubstituteFor(property.PropertyType).GetInstance())},
-                {() => property.IsPageComponent(), () => InvocationResult.Assign(GenerateComponentProxy(property))},
-                {() => !attributes.Any(), () => InvocationResult.Proceed},
-                {() => attributes.Count > 1, () => { throw new Exception("Only one selection attribute is valid per property."); }},
-                {() => invocation.Method.IsSetProperty(), () => { throw new Exception("You can't set a property that has a selection attribute."); }},
-                {() => _elementSelectionHandler.SelectElement(firstAttribute, property) == null, () => InvocationResult.Proceed },
-                {
-                    () => _elementSelectionHandler.SelectElement(firstAttribute, property) != null,
-                    () => InvocationResult.Assign(_elementSelectionHandler.SelectElement(attributes.First(), property))
-                },
+                {() => SubstituteFor(ctx) != null, () => Assign(SubstituteFor(ctx))},
+                {() => !ctx.Attributes.Any() && !ctx.IsPageComponent, () => Proceed },
+                {() => ctx.IsPageComponent, () => Assign(ProxyFor(ctx.TargetProperty))},
+                {() => ElementFor(ctx) != null, () => Assign(ElementFor(ctx))}
             }.Route();
 
-            Invoke(invocation, result);
-            PostProcessReturnValue(invocation);
+            EnsureAnyElementsAreSaflyLoaded(ctx);
+
+            invocation.Assign(result);
+            invocation.ReturnValue = _postProcessor.PostProcessReturnValue(invocation.ReturnValue, ctx, _configuration);
         }
 
-        private void PostProcessReturnValue(IInvocation invocation)
+        private object SubstituteFor(PropertySelectionContext ctx)
         {
-            if (invocation.ReturnValue == null
-                || !invocation.ReturnValue.IsAProxy())
+            return _typeSubstitution.FindSubstituteFor(ctx.TargetProperty.PropertyType)?.GetInstance();
+        }
+
+        private void EnsureAnyElementsAreSaflyLoaded(PropertySelectionContext ctx)
+        {
+            try { ElementFor(ctx); } catch{ /*..*/ }
+        }
+
+        private object ElementFor(PropertySelectionContext ctx)
+        {
+            if (ctx.RawSelectedElement != null)
             {
-                return;
+                return ctx.RawSelectedElement;
             }
 
-            invocation.ReturnValue = invocation.Method.ReturnType.IsAPageObject()
-                ? ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _configuration)
-                : ProxyGenerator.Generate(invocation.Method.ReturnType, _configuration);
+            if (ctx.Attributes.Count > 1) throw new Exception("Only one selection attribute is valid per property.");
+            if (ctx.IsPropertySetter) throw new Exception("You can't set a property that has a selection attribute.");
+            return ctx.RawSelectedElement = _elementSelectionHandler.SelectElement(ctx.FirstAttribute, ctx.TargetProperty);
         }
 
-        private static void Invoke(IInvocation invocation, InvocationResult result)
-        {
-            if (result == InvocationResult.Proceed)
-            {
-                invocation.Proceed();
-                return;
-            }
-
-            invocation.ReturnValue = result.Value;
-        }
-
-        private object GenerateComponentProxy(PropertyInfo property)
+        private object ProxyFor(PropertyInfo property)
         {
             return ProxyGenerator.Generate(property.PropertyType, _configuration);
         }
@@ -88,16 +83,29 @@ namespace Passenger.ModelInterception
                 {
                     return rule.Value();
                 }
-                return InvocationResult.Proceed;
+                return Proceed;
             }
         }
 
         public class InvocationResult
         {
             public object Value { get; set; }
-            public static InvocationResult Proceed { get { return ProceedBacking; } }
-            private static readonly InvocationResult ProceedBacking = new InvocationResult();
+            public static InvocationResult Proceed { get; } = new InvocationResult();
             public static InvocationResult Assign(object result) { return new InvocationResult {Value = result};}
+        }
+    }
+
+    public static class InvocationExtensions
+    {
+        public static void Assign(this IInvocation invocation, PageObjectProxy.InvocationResult result)
+        {
+            if (result == Proceed)
+            {
+                invocation.Proceed();
+                return;
+            }
+
+            invocation.ReturnValue = result.Value;
         }
     }
 }

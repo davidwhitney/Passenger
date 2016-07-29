@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Castle.Components.DictionaryAdapter.Xml;
 using OpenQA.Selenium;
 using Passenger.Attributes;
+using Passenger.ModelInterception;
 
 namespace Passenger.CommandHandlers
 {
     public static class TypeMapping
     {
-        public static object ReturnOrMap(object sourceElement, Type targetType)
+        public static object ReturnOrMap(object sourceElement, Type targetType, PassengerConfiguration cfg)
         {
             if (sourceElement == null)
             {
@@ -25,69 +27,56 @@ namespace Passenger.CommandHandlers
             if (sourceElement.GetType().IsCollection()
                 && targetType.IsCollection())
             {
-                return BuildCollectionOfWrappers(sourceElement, targetType);
+                return BuildCollectionOfWrappers(sourceElement, targetType, cfg);
             }
 
             return sourceElement;
         }
 
-        private static IEnumerable BuildCollectionOfWrappers(object sourceElement, Type targetType)
+        public static IEnumerable BuildCollectionOfWrappers(object sourceElement, Type targetType, PassengerConfiguration configuration)
         {
-            var elementType = GetElementType(targetType);
-            var enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
-            var passengerItems = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-            
+            var elementType = targetType.GetElementItemType();
+
+            var wrappedItems = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
             foreach (var item in (IEnumerable) sourceElement)
             {
-                var itemToAdd = item;
-                if (elementType.IsAPassengerElement())
-                {
-                    itemToAdd = WrapIntoPassengerElement(item, elementType);
-                }
-
-                passengerItems.Add(itemToAdd);
+                var itemToAdd = CreateWrappedOrProxiedItem(elementType, item, configuration);
+                wrappedItems.Add(itemToAdd);
             }
 
             if (targetType.IsArray)
             {
-                return TypedArray(elementType, passengerItems);
+                return wrappedItems.ToArray(elementType);
             }
 
+            var enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
             if (targetType.Implements(enumerableOfElementType)
                 || targetType == enumerableOfElementType)
             {
-                return passengerItems;
+                return wrappedItems;
             }
 
-            return (IEnumerable)Activator.CreateInstance(targetType, passengerItems);
+            return (IEnumerable)Activator.CreateInstance(targetType, wrappedItems);
         }
 
-        private static IEnumerable TypedArray(Type elementType, IList passengerItems)
+        private static object CreateWrappedOrProxiedItem(Type ofType, object sourceItem, PassengerConfiguration configuration)
         {
-            var array = Array.CreateInstance(elementType, passengerItems.Count);
-            for (var index = 0; index < passengerItems.Count; index++)
+            var itemToAdd = sourceItem;
+
+            if (ofType.IsAPassengerElement())
             {
-                array.SetValue(passengerItems[index], index);
+                itemToAdd = WrapIntoPassengerElement(sourceItem, ofType);
             }
-            return array;
+
+            if (ofType.IsPageComponent())
+            {
+                itemToAdd = ProxyGenerator.Generate(ofType, configuration);
+            }
+
+            return itemToAdd;
         }
 
-        private static Type GetElementType(Type targetType)
-        {
-            if (targetType.GetElementType() != null)
-            {
-                return targetType.GetElementType();
-            }
-
-            var genericArgs = targetType.GetGenericArguments().FirstOrDefault();
-            if (genericArgs == null)
-            {
-                throw new NotSupportedException(string.Format("Cannot map to type '{0}' - try using List<T>, Type[] or other generic collection types.", targetType.Name));
-            }
-            return genericArgs;
-        }
-
-        private static IPassengerElement WrapIntoPassengerElement(object singleElement, Type targetType)
+        public static IPassengerElement WrapIntoPassengerElement(object singleElement, Type targetType)
         {
             var wrapper = (IPassengerElement)Activator.CreateInstance(targetType);
             wrapper.Inner = (IWebElement)singleElement;
