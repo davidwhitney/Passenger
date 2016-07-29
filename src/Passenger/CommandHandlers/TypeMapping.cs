@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using OpenQA.Selenium;
 using Passenger.Attributes;
 using Passenger.ModelInterception;

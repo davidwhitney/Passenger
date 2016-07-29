@@ -55,7 +55,7 @@ namespace Passenger.ModelInterception
 
         private void EnsureAnyElementsAreSaflyLoaded(PropertySelectionContext ctx)
         {
-            try { ElementFor(ctx); } catch{ /*..*/ }
+            try { ElementFor(ctx); } catch { /* ¯_(ツ)_/¯ */ }
         }
 
         private object ElementFor(PropertySelectionContext ctx)
