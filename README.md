@@ -380,6 +380,14 @@ using (var context = testConfig.StartTestAt<Homepage>())
 
 If you need access to the initial `PageObject<TYourPageObject>` you can use the method `Arrives.AtPageObject<TYourPageObject>` as your method return.
 
+### Navgating between domains
+
+Both the .GoTo<T> and Arrive.At<T> methods contain an optional `rebaseOn` parameter.
+Providing a value will switch the WebRoot you're currently navigating across to support
+scenarios where the same relative, attribute based Uris are split across multiple domains.
+
+You can also manually manipulate the WebRoot on your configuration object at any time.
+
 ## Building UI abstractions with IPassengerElements
 
 In addition to your Page Objects and Page Components you may find you need to test web applications with small repeating UI elements that you need to write some WebDriver code to maniuplate - it could be something as small as a button, or as complex as a specific type of menu or javascript driven control. We have provided a hook - the `IPassengerElement` - to help you capture these interactions.

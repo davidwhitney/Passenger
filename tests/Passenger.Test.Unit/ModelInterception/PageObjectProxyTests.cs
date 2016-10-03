@@ -15,6 +15,7 @@ namespace Passenger.Test.Unit.ModelInterception
     {
         private InterceptedType _proxy;
         private Mock<IDriverBindings> _fakeDriver;
+        private PassengerConfiguration _cfg;
 
         [SetUp]
         public void Setup()
@@ -33,8 +34,8 @@ namespace Passenger.Test.Unit.ModelInterception
                 new DriverBindings.Handle<CssSelectorAttribute>((s, d) => new FakeWebElement(s))
             });
 
-            var cfg = new PassengerConfiguration { Driver = _fakeDriver.Object };
-            _proxy = ProxyGenerator.Generate<InterceptedType>(cfg);
+            _cfg = new PassengerConfiguration { Driver = _fakeDriver.Object };
+            _proxy = ProxyGenerator.Generate<InterceptedType>(_cfg);
         }
 
         [Test]
@@ -161,6 +162,22 @@ namespace Passenger.Test.Unit.ModelInterception
         }
 
         [Test]
+        public void Intercept_MethodThatTransitionsCalled_CorrectConfigReturned()
+        {
+            var newPageObject = _proxy.MethodThatTransitions();
+
+            Assert.That(newPageObject.Configuration, Is.EqualTo(_cfg));
+        }
+
+        [Test]
+        public void Intercept_MethodThatTransitionsWithRebaseCalled_ModifiesConfiguration()
+        {
+            var newPageObject = _proxy.MethodThatTransitionsAndRebases("http://www.google.com");
+
+            Assert.That(newPageObject.Configuration.WebRoot, Is.EqualTo("http://www.google.com"));
+        }
+
+        [Test]
         public void Intercept_MethodThatTransitionsRawCalled_ReturnsProxiedObjectForChaining()
         {
             var newPageObject = _proxy.MethodThatTransitionsRaw();
@@ -202,6 +219,11 @@ namespace Passenger.Test.Unit.ModelInterception
             public virtual PageObject<SomethingElse> MethodThatTransitions()
             {
                 return Arrives.AtPageObject<SomethingElse>();
+            }
+
+            public virtual PageObject<SomethingElse> MethodThatTransitionsAndRebases(string rebaseTo)
+            {
+                return Arrives.AtPageObject<SomethingElse>(rebaseOn: rebaseTo);
             }
 
             public virtual SomethingElse MethodThatTransitionsRaw()

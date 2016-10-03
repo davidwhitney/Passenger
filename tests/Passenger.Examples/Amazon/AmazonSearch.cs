@@ -49,7 +49,6 @@ namespace Passenger.Examples.Amazon
                 context.Page<Homepage>().SearchFor("Game of thrones");
                 var ex = context.Page<SearchResultsPage>().AllH2s.Where(x => x.Text == "Game of Thrones - Season 4");
 
-
                 Assert.That(ex, Is.Not.Null);
             }
         }

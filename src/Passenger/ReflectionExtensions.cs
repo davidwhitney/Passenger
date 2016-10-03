@@ -88,6 +88,11 @@ namespace Passenger
             return type.Name.Contains("PageObject`1");
         }
 
+        public static bool IsAPageTransitionObject(this Type type)
+        {
+            return type.Name.Contains("PageTransitionObject`1");
+        }
+
         public static Type GetGenericParam(this Type type)
         {
             return type.GetGenericArguments().First();

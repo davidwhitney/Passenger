@@ -26,6 +26,17 @@ namespace Passenger.ModelInterception
                 return;
             }
 
+            if (invocation.ReturnValue.GetType().IsAPageTransitionObject())
+            {
+                var rebaseUri = invocation.ReturnValue.GetRebaseOn();
+                if (!string.IsNullOrWhiteSpace(rebaseUri))
+                {
+                    _configuration.WebRoot = rebaseUri;
+                }
+                invocation.ReturnValue = ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _configuration);
+                return;
+            }
+
             invocation.ReturnValue = invocation.Method.ReturnType.IsAPageObject()
                 ? ProxyGenerator.GenerateWrappedPageObject(invocation.Method.ReturnType.GetGenericParam(), _configuration)
                 : ProxyGenerator.Generate(invocation.Method.ReturnType, _configuration);

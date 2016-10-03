@@ -1,19 +1,27 @@
 ﻿using Passenger.ModelInterception;
+using static Passenger.ModelInterception.ProxyGenerator;
 
 namespace Passenger
 {
-    public class Arrives
+    public static class Arrives
     {
-        public static TPageObjectType At<TPageObjectType>()
+        public static TPageObjectType At<TPageObjectType>(string rebaseOn = null)
             where TPageObjectType : class, new()
         {
-            return ProxyGenerator.GenerateNavigationProxy<TPageObjectType>();
+            var proxy = GenerateNavigationProxy<TPageObjectType>();
+
+            if (proxy.GetType().IsAPageTransitionObject())
+            {
+                proxy.SetRebaseOn(rebaseOn);
+            }
+
+            return proxy;
         }
 
-        public static PageObject<TPageObjectType> AtPageObject<TPageObjectType>()
+        public static PageTransitionObject<TPageObjectType> AtPageObject<TPageObjectType>(string rebaseOn = null)
             where TPageObjectType : class
         {
-            return At<PageObject<TPageObjectType>>();
+            return At<PageTransitionObject<TPageObjectType>>(rebaseOn);
         }
     }
 }

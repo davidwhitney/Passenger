@@ -19,6 +19,14 @@ namespace Passenger.Test.Unit
         }
 
         [Test]
+        public void GoTo_GivenRebaseUri_ReconfiguresConfig()
+        {
+            _po.GoTo<FakePage>(rebaseOn: "http://www.amazon.com");
+
+            Assert.That(_config.WebRoot, Is.EqualTo("http://www.amazon.com"));
+        }
+
+        [Test]
         public void VerifyRedirection_DelegatesUrlVerificationToConfiguredStartegy()
         {
             _config.UrlVerificationStrategies = new UrlVerificationStrategyCollection {new FakeUrlVerifier()};

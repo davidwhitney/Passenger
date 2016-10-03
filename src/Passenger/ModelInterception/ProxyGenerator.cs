@@ -1,5 +1,4 @@
 ﻿using System;
-using Passenger.Drivers;
 
 namespace Passenger.ModelInterception
 {
@@ -12,24 +11,22 @@ namespace Passenger.ModelInterception
             return (PageObject)Activator.CreateInstance(typePageObjectOfT, driver, wrappedProxy);
         }
 
-        public static TPageObjectType Generate<TPageObjectType>(PassengerConfiguration driver) where TPageObjectType : class
+        public static TPageObjectType Generate<TPageObjectType>(PassengerConfiguration configuration) where TPageObjectType : class
         {
-            return (TPageObjectType)Generate(typeof (TPageObjectType), driver);
+            return (TPageObjectType)Generate(typeof (TPageObjectType), configuration);
         }
 
         public static T GenerateNavigationProxy<T>()
         {
-            return (T)new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(typeof (T), new NavigationProxy());
+            return (T)new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(typeof(T));
         }
 
-        public static object Generate(Type propertyType, PassengerConfiguration driver)
+        public static object Generate(Type propertyType, PassengerConfiguration configuration)
         {
-            if (driver == null)
-            {
-                throw new ArgumentNullException("driver");
-            }
+            if (propertyType == null) throw new ArgumentNullException(nameof(propertyType));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            return new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(propertyType, new PageObjectProxy(driver));
+            return new Castle.DynamicProxy.ProxyGenerator().CreateClassProxy(propertyType, new PageObjectProxy(configuration));
         }
     }
 }

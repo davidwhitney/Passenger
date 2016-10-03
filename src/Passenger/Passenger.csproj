@@ -64,10 +64,10 @@
     <Compile Include="Attributes\UriAttribute.cs" />
     <Compile Include="CommandHandlers\ElementSelectionHandler.cs" />
     <Compile Include="Drivers\DriverBindings.cs" />
-    <Compile Include="ModelInterception\NavigationProxy.cs" />
     <Compile Include="Arrives.cs" />
     <Compile Include="ModelInterception\PropertySelectionContext.cs" />
     <Compile Include="ModelInterception\ReturnValuePostProcessor.cs" />
+    <Compile Include="ModelInterception\NavigationObjectExtensions.cs" />
     <Compile Include="PageObjectInspections\UrlDiscovery\DefaultUrlDiscoveryStrategy.cs" />
     <Compile Include="PageObjectInspections\UrlDiscovery\DiscoveredUrl.cs" />
     <Compile Include="PageObjectInspections\UrlDiscovery\IDiscoverUrls.cs" />

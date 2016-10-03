@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Passenger.ModelInterception;
 using Passenger.PageObjectInspections.UrlDiscovery;
 
@@ -10,8 +9,13 @@ namespace Passenger
         public PassengerConfiguration Configuration { get; set; }
         public object CurrentProxy { get; set; }
 
-        public TNextPageObjectType GoTo<TNextPageObjectType>(Uri uri = null) where TNextPageObjectType : class
+        public TNextPageObjectType GoTo<TNextPageObjectType>(Uri uri = null, string rebaseOn = null) where TNextPageObjectType : class
         {
+            if (rebaseOn != null)
+            {
+                Configuration.WebRoot = rebaseOn;
+            }
+
             CurrentProxy = CreateOrReturnProxy<TNextPageObjectType>();
 
             var url = uri ?? UrlFor(CurrentProxy).Url;
@@ -74,8 +78,12 @@ namespace Passenger
         public PageObject(PassengerConfiguration configuration, Uri uri = null)
         {
             Configuration = configuration;
-
             GoTo<TPageObjectType>(uri);
         }
+    }
+
+    public class PageTransitionObject<TPageObjectType> : PageObject<TPageObjectType> where TPageObjectType : class
+    {
+        public string RebaseOn { get; set; }
     }
 }
