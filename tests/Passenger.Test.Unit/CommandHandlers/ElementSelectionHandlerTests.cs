@@ -7,9 +7,6 @@ using Passenger.Drivers;
 using Moq;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.PhantomJS;
-using Passenger.ModelInterception;
 
 namespace Passenger.Test.Unit.CommandHandlers
 {
@@ -70,8 +67,8 @@ namespace Passenger.Test.Unit.CommandHandlers
                 Assert.Throws<NavigationTypeNotSupportedException>(
                     () => _handler.SelectElement(_idAttribute, _someDivPropertyInfo));
 
-            Assert.That(ex.Message, Is.StringContaining("IdAttribute"));
-            Assert.That(ex.Message, Is.StringContaining("SomeDiv"));
+            Assert.That(ex.Message, Does.Contain("IdAttribute"));
+            Assert.That(ex.Message, Does.Contain("SomeDiv"));
         }
 
         [Test]

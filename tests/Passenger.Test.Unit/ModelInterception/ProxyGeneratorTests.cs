@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Passenger.Drivers;
 using Passenger.ModelInterception;
 using Castle.DynamicProxy;
@@ -49,7 +50,10 @@ namespace Passenger.Test.Unit.ModelInterception
         {
             var proxy = ProxyGenerator.Generate<PopgTestObject>(_fakeDriver);
 
-            var interceptor = ((IInterceptor[])proxy.GetType().GetFields().Single(x => x.Name == "__interceptors").GetValue(proxy)).Single();
+            var interceptor = ((IInterceptor[]) proxy.GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Single(x => x.Name == "__interceptors")
+                .GetValue(proxy)).Single();
 
             Assert.That(interceptor, Is.TypeOf<PageObjectProxy>());
         }

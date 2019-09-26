@@ -47,6 +47,11 @@ namespace Passenger.Test.Unit.Fakes
             throw new NotImplementedException();
         }
 
+        public string GetProperty(string propertyName)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetCssValue(string propertyName)
         {
             throw new NotImplementedException();

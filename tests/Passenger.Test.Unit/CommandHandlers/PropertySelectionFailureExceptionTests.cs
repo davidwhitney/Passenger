@@ -17,7 +17,7 @@ namespace Passenger.Test.Unit.CommandHandlers
 
             var ex = new PropertySelectionFailureException(propInfo, new Exception("Inner"));
 
-            Assert.That(ex.Message, Is.StringContaining("SomeRandomProperty"));
+            Assert.That(ex.Message, Does.Contain("SomeRandomProperty"));
         }
     }
 }

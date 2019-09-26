@@ -1,6 +1,6 @@
 ﻿using Passenger.Drivers.RemoteWebDriver;
 using NUnit.Framework;
-using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Chrome;
 
 namespace Passenger.Test.Unit.Drivers.RemoteWebDriver
 {
@@ -10,7 +10,7 @@ namespace Passenger.Test.Unit.Drivers.RemoteWebDriver
         [Test]
         public void WithDriver__GivenDriver_AssignsDriver()
         {
-            var driver = (PhantomJSDriver) System.Runtime.Serialization.FormatterServices.GetSafeUninitializedObject(typeof (PhantomJSDriver)); // Sorry mom
+            var driver = (ChromeDriver) System.Runtime.Serialization.FormatterServices.GetSafeUninitializedObject(typeof (ChromeDriver)); // Sorry mom
             
             var cfg = new PassengerConfiguration().WithDriver(driver);
 

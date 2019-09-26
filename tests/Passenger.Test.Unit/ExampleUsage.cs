@@ -4,12 +4,12 @@ using Passenger.Attributes;
 using Passenger.Drivers.RemoteWebDriver;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 
 namespace Passenger.Test.Unit
 {
-    [Ignore("Demo test")]
+    //[Ignore("Demo test")]
     [TestFixture]
     public class ExampleUsage
     {
@@ -22,7 +22,7 @@ namespace Passenger.Test.Unit
             _testConfig = new PassengerConfiguration
             {
                 WebRoot = "http://www.davidwhitney.co.uk"
-            }.WithDriver(new PhantomJSDriver());
+            }.WithDriver(new ChromeDriver(Environment.CurrentDirectory));
         }
 
         [TearDown]
@@ -55,18 +55,18 @@ namespace Passenger.Test.Unit
         // Magically wired up.
         protected virtual RemoteWebDriver YayWebDriver { get; set; }
 
-        [Id("middleWrapper")]
+        [Id("heroWrapper")]
         public virtual IWebElement MiddleWrapper { get; set; }
 
         [Id]
-        public virtual IWebElement middleWrapper { get; set; }
+        public virtual IWebElement heroWrapper { get; set; }
 
         [LinkText]
         public virtual IWebElement Blog { get; set; }
 
         public void FillInForm(string user)
         {
-            var ele = YayWebDriver.FindElementById("middleWrapper"); // Or some other driver operation
+            var ele = YayWebDriver.FindElementById("heroWrapper"); // Or some other driver operation
         }
     }
 

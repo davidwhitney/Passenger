@@ -12,8 +12,8 @@ namespace Passenger.Test.Unit.CommandHandlers
         {
             var ex = new NavigationTypeNotSupportedException(new IdAttribute(), "myElement");
 
-            Assert.That(ex.Message, Is.StringContaining("IdAttribute"));
-            Assert.That(ex.Message, Is.StringContaining("myElement"));
+            Assert.That(ex.Message, Does.Contain("IdAttribute"));
+            Assert.That(ex.Message, Does.Contain("myElement"));
         }
     }
 }
