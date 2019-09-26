@@ -10,7 +10,7 @@ namespace Passenger.Test.Unit
     public class PassengerConfigurationTests
     {
         [Test]
-        public void Ctor_DefaultConfiguration_HasUrlVerificationStrategyOfStringContainingStrategyy()
+        public void Ctor_DefaultConfiguration_HasUrlVerificationStrategyOfStringContainingStrategy()
         {
             var config = new PassengerConfiguration();
 
