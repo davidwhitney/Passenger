@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Passenger.Attributes;
 using Passenger.Drivers.RemoteWebDriver;
 using NUnit.Framework;
@@ -19,10 +20,16 @@ namespace Passenger.Test.Unit
         [SetUp]
         public void Setup()
         {
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("--headless");
+            chromeOptions.AddArgument("--no-sandbox");
+            chromeOptions.AddArgument("window-size=1400,2100");
+            var driver = new ChromeDriver(Environment.CurrentDirectory, chromeOptions);
+
             _testConfig = new PassengerConfiguration
             {
                 WebRoot = "http://www.davidwhitney.co.uk"
-            }.WithDriver(new ChromeDriver(Environment.CurrentDirectory));
+            }.WithDriver(driver);
         }
 
         [TearDown]
