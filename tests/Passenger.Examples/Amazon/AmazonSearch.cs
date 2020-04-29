@@ -3,32 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using Passenger.Attributes;
 using Passenger.Drivers.RemoteWebDriver;
 
 namespace Passenger.Examples.Amazon
 {
-    [Ignore]
     [TestFixture]
     public class AmazonExample
     {
+        private ChromeDriver driver;
+
+        [SetUp]
+        public void Setup()
+        {
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("--headless");
+            chromeOptions.AddArgument("--no-sandbox");
+            chromeOptions.AddArgument("window-size=1400,2100");
+            driver = new ChromeDriver(Environment.CurrentDirectory, chromeOptions);
+        }
+
         [Test]
         public void WithoutPassenger()
         {
-            using (var webdriver = new PhantomJSDriver())
+            using (driver)
             {
-                webdriver.Navigate().GoToUrl("http://www.amazon.co.uk");
-                var myElement = webdriver.FindElementById("twotabsearchtextbox");
+                driver.Navigate().GoToUrl("http://www.amazon.co.uk");
+                var myElement = driver.FindElementById("twotabsearchtextbox");
 
                 myElement.Click();
                 myElement.SendKeys("Game of thrones");
 
-                var goButton = webdriver.FindElementByClassName("nav-searchbar");
+                var goButton = driver.FindElementByClassName("nav-searchbar");
                 goButton.Submit();
 
-                var allH2s = webdriver.FindElementsByTagName("h2");
+                var allH2s = driver.FindElementsByTagName("h2");
 
                 var oneWithGameOfThrones = allH2s.Where(x => x.Text == "Game of Thrones - Season 4");
 
@@ -42,7 +53,7 @@ namespace Passenger.Examples.Amazon
             var testConfig = new PassengerConfiguration
             {
                 WebRoot = "http://www.amazon.co.uk"
-            }.WithDriver(new PhantomJSDriver());
+            }.WithDriver(driver);
 
             using (var context = testConfig.StartTestAt<Homepage>())
             {
@@ -59,7 +70,7 @@ namespace Passenger.Examples.Amazon
             var testConfig = new PassengerConfiguration
             {
                 WebRoot = "http://www.amazon.co.uk"
-            }.WithDriver(new PhantomJSDriver());
+            }.WithDriver(driver);
 
             using (var context = testConfig.StartTestAt<Homepage>())
             {
@@ -84,7 +95,7 @@ namespace Passenger.Examples.Amazon
             public virtual SearchResultsPage SearchFor(string thing)
             {
                 SearchBox.Click();
-                Driver.Keyboard.SendKeys(thing);
+                SearchBox.SendKeys(thing);
                 SearchForm.Submit();
 
                 return Arrives.At<SearchResultsPage>();

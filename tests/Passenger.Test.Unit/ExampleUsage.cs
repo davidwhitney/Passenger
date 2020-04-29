@@ -10,7 +10,6 @@ using OpenQA.Selenium.Remote;
 
 namespace Passenger.Test.Unit
 {
-    //[Ignore("Demo test")]
     [TestFixture]
     public class ExampleUsage
     {
@@ -43,9 +42,6 @@ namespace Passenger.Test.Unit
         {
             _pageObject = _testConfig.StartTestAt<Homepage>();
 
-            _pageObject.Page<Homepage>().MiddleWrapper.Click();
-            _pageObject.Page<Homepage>().FillInForm("abc");
-
             _pageObject.Page<Homepage>().Blog.Click();
             _pageObject.VerifyRedirectionTo<Blog>();
             
@@ -62,25 +58,14 @@ namespace Passenger.Test.Unit
         // Magically wired up.
         protected virtual RemoteWebDriver YayWebDriver { get; set; }
 
-        [Id("heroWrapper")]
-        public virtual IWebElement MiddleWrapper { get; set; }
-
-        [Id]
-        public virtual IWebElement heroWrapper { get; set; }
-
         [LinkText]
         public virtual IWebElement Blog { get; set; }
-
-        public void FillInForm(string user)
-        {
-            var ele = YayWebDriver.FindElementById("heroWrapper"); // Or some other driver operation
-        }
     }
 
     [Uri("/Blog")]
     public class Blog
     {
-        [CssSelector(".blog-post-title-on-index")]
+        [CssSelector(".content")]
         public virtual IEnumerable<IWebElement> Posts { get; set; }
     }
 

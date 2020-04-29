@@ -86,11 +86,17 @@ public class ExampleUsage
   [SetUp]
   public void Setup()
   {
+    var chromeOptions = new ChromeOptions();
+    chromeOptions.AddArgument("--headless");
+    chromeOptions.AddArgument("--no-sandbox");
+    chromeOptions.AddArgument("window-size=1400,2100");
+    var driver = new ChromeDriver(Environment.CurrentDirectory, chromeOptions);
+
     _testConfig = new PassengerConfiguration
     {
-      WebRoot = "http://www.davidwhitney.co.uk"
-      }.WithDriver(new PhantomJSDriver());
-    }
+        WebRoot = "http://www.davidwhitney.co.uk"
+    }.WithDriver(driver);
+  }
 
     [Test]
     public void BrowseToTheHomepage_ClickADiv_FillInAForm_ThenGoToTheBlog()
@@ -138,7 +144,7 @@ If you use a wrapping library, we'd more than welcome you to provide an implemen
 ## Writing your first test
 
 * You need a SetUp creating an `PassengerConfiguration` object for your site.
-* You need to add a `WebDriver` instance (like the PhantomJsDriver or FirefoxDriver) to the configuration.
+* You need to add a `WebDriver` instance (like the ChromeDriver or FirefoxDriver) to the configuration.
 * You need to create a `PassengerTestContext` by calling ```_testConfig.StartTestAt<TMyPageObjectType>()```
 * You need to add a TearDown method that Disposes of the `PassengerTestContext`
 
@@ -155,13 +161,19 @@ public class ExampleUsage
   [SetUp]
   public void Setup()
   {
+    var chromeOptions = new ChromeOptions();
+    chromeOptions.AddArgument("--headless");
+    chromeOptions.AddArgument("--no-sandbox");
+    chromeOptions.AddArgument("window-size=1400,2100");
+    var driver = new ChromeDriver(Environment.CurrentDirectory, chromeOptions);
+
     _testConfig = new PassengerConfiguration
     {
-      WebRoot = "http://tempuri.org"
-      }.WithDriver(new PhantomJSDriver());
+        WebRoot = "http://tempuri.org"
+    }.WithDriver(driver);
 
-      _ctx = _testConfig.StartTestAt<MyPageObject>();
-    }
+    _ctx = _testConfig.StartTestAt<MyPageObject>();
+  }
 
     [TearDown]
     public void Teardown()
@@ -358,7 +370,7 @@ public class Homepage
     public virtual SearchResultsPage SearchFor(string thing)
     {
         SearchBox.Click();
-        Driver.Keyboard.SendKeys(thing);
+        SearchBox.SendKeys(thing);
         SearchForm.Submit();
 
         return Arrives.At<SearchResultsPage>();
