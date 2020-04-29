@@ -34,7 +34,7 @@ namespace Passenger.Test.Unit.ModelInterception
         {
             var ex = Assert.Throws<ArgumentNullException>(() => ProxyGenerator.Generate<PopgTestObject>(null));
 
-            Assert.That(ex.Message, Is.EqualTo("Value cannot be null.\r\nParameter name: configuration"));
+            Assert.That(ex.Message, Is.EqualTo("Value cannot be null. (Parameter 'configuration')"));
         }
 
         [Test]
